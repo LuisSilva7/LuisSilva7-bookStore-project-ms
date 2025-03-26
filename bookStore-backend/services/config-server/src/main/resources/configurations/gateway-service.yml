@@ -1,0 +1,40 @@
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:5173"
+            allowedMethods:
+              - "GET"
+              - "POST"
+              - "PUT"
+              - "DELETE"
+              - "OPTIONS"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: book-service
+          uri: lb:http://BOOK-SERVICE
+          predicates:
+            - Path=/api/v1/books/**
+        - id: cart-service
+          uri: lb:http://CART-SERVICE
+          predicates:
+            - Path=/api/v1/carts/**
+        - id: order-service
+          uri: lb:http://ORDER-SERVICE
+          predicates:
+            - Path=/api/v1/orders/**
+        - id: user-service
+          uri: lb:http://USER-SERVICE
+          predicates:
+            - Path=/api/v1/users/**
+
+server:
+  port: 8222
