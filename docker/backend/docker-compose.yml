@@ -1,23 +1,76 @@
+version: '3.8'
+
 services:
   mysql:
     container_name: ms_mysql_book_store
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: book_store_db
       MYSQL_USER: username
       MYSQL_PASSWORD: password
     volumes:
-      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "3306:3306"
     networks:
       - microservices-net
-    restart: unless-stopped
+
+  config-server-service:
+    build: ../../bookStore-backend/services/config-server/Dockerfile
+    networks:
+      - microservices-net
+    depends_on:
+      - mysql
+
+  books-service:
+    build: ../../bookStore-backend/services/book/Dockerfile
+    networks:
+      - microservices-net
+    depends_on:
+      - mysql
+
+  carts-service:
+    build: ../../bookStore-backend/services/cart/Dockerfile
+    networks:
+      - microservices-net
+    depends_on:
+      - mysql
+
+  orders-service:
+    build: ../../bookStore-backend/services/order/Dockerfile
+    networks:
+      - microservices-net
+    depends_on:
+      - mysql
+
+  shippings-service:
+    build: ../../bookStore-backend/services/shipping/Dockerfile
+    networks:
+      - microservices-net
+    depends_on:
+      - mysql
+
+  users-service:
+    build: ../../bookStore-backend/services/user/Dockerfile
+    networks:
+      - microservices-net
+    depends_on:
+      - mysql
+
+  discovery-service:
+    build: ../../bookStore-backend/services/discovery/Dockerfile
+    networks:
+      - microservices-net
+    depends_on:
+      - mysql
+
+  gateway-service:
+    build: ../../bookStore-backend/services/gateway/Dockerfile
+    networks:
+      - microservices-net
+    depends_on:
+      - mysql
 
 networks:
   microservices-net:
     driver: bridge
-
-volumes:
-  mysql_data:
