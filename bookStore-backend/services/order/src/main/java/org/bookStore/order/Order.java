@@ -1,0 +1,36 @@
+package org.bookStore.order;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.Date;
+import java.util.List;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Getter
+@Setter
+@Entity
+public class Order {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_id")
+    private Long orderID;
+
+    @Column
+    private Date orderDate;
+
+    @Column
+    private double totalPrice;
+
+    @Column(name = "cart_id")
+    private Long cartId;
+
+    @Column(name = "shipping_order_id")
+    private Long shippingOrderId;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderDetails> orderDetails;
+}

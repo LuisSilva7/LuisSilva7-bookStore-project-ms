@@ -16,60 +16,79 @@ services:
       - microservices-net
 
   config-server-service:
-    build: ../../bookStore-backend/services/config-server/Dockerfile
-    networks:
-      - microservices-net
-    depends_on:
-      - mysql
-
-  books-service:
-    build: ../../bookStore-backend/services/book/Dockerfile
-    networks:
-      - microservices-net
-    depends_on:
-      - mysql
-
-  carts-service:
-    build: ../../bookStore-backend/services/cart/Dockerfile
-    networks:
-      - microservices-net
-    depends_on:
-      - mysql
-
-  orders-service:
-    build: ../../bookStore-backend/services/order/Dockerfile
-    networks:
-      - microservices-net
-    depends_on:
-      - mysql
-
-  shippings-service:
-    build: ../../bookStore-backend/services/shipping/Dockerfile
-    networks:
-      - microservices-net
-    depends_on:
-      - mysql
-
-  users-service:
-    build: ../../bookStore-backend/services/user/Dockerfile
+    build:
+      context: ../../bookStore-backend/services/config-server
     networks:
       - microservices-net
     depends_on:
       - mysql
 
   discovery-service:
-    build: ../../bookStore-backend/services/discovery/Dockerfile
+    build:
+      context: ../../bookStore-backend/services/discovery
     networks:
       - microservices-net
     depends_on:
       - mysql
 
   gateway-service:
-    build: ../../bookStore-backend/services/gateway/Dockerfile
+    build:
+      context: ../../bookStore-backend/services/gateway
+    networks:
+      - microservices-net
+    depends_on:
+      - discovery-service
+      - config-server-service
+
+  books-service:
+    build:
+      context: ../../bookStore-backend/services/book
     networks:
       - microservices-net
     depends_on:
       - mysql
+      - discovery-service
+      - config-server-service
+
+  carts-service:
+    build:
+      context: ../../bookStore-backend/services/cart
+    networks:
+      - microservices-net
+    depends_on:
+      - mysql
+      - discovery-service
+      - config-server-service
+
+  orders-service:
+    build:
+      context: ../../bookStore-backend/services/order
+    networks:
+      - microservices-net
+    depends_on:
+      - mysql
+      - discovery-service
+      - config-server-service
+
+  shippings-service:
+    build:
+      context: ../../bookStore-backend/services/shipping
+    networks:
+      - microservices-net
+    depends_on:
+      - mysql
+      - discovery-service
+      - config-server-service
+
+  users-service:
+    build:
+      context: ../../bookStore-backend/services/user
+    networks:
+      - microservices-net
+    depends_on:
+      - mysql
+      - discovery-service
+      - config-server-service
 
 networks:
   microservices-net:
