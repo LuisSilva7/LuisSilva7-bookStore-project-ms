@@ -1,4 +1,4 @@
-package org.bookStore.order;
+package org.bookStore.order.orderDetails;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

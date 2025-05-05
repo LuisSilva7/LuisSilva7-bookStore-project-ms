@@ -1,7 +1,8 @@
-package org.bookStore.book;
+package org.bookStore.book.author;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.bookStore.book.book.Book;
 
 import java.util.List;
 

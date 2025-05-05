@@ -1,7 +1,8 @@
-package org.bookStore.cart;
+package org.bookStore.cart.cart;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.bookStore.cart.cartItem.CartItem;
 
 import java.time.LocalDate;
 import java.util.List;

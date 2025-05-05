@@ -1,7 +1,9 @@
-package org.bookStore.book;
+package org.bookStore.book.book;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.bookStore.book.author.Author;
+import org.bookStore.book.category.Category;
 
 @AllArgsConstructor
 @NoArgsConstructor

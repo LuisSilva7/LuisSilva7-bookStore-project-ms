@@ -1,4 +1,4 @@
-package org.bookStore.book;
+package org.bookStore.book.category;
 
 import jakarta.persistence.*;
 import lombok.*;

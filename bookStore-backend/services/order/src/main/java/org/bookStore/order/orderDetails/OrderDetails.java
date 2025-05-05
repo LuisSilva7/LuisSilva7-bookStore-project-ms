@@ -1,7 +1,8 @@
-package org.bookStore.order;
+package org.bookStore.order.orderDetails;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.bookStore.order.order.Order;
 
 @AllArgsConstructor
 @NoArgsConstructor

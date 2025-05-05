@@ -1,4 +1,4 @@
-package org.bookStore.shipping;
+package org.bookStore.shipping.shipping;
 
 import jakarta.persistence.*;
 import lombok.*;

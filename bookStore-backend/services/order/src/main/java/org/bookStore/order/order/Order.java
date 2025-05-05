@@ -1,7 +1,8 @@
-package org.bookStore.order;
+package org.bookStore.order.order;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.bookStore.order.orderDetails.OrderDetails;
 
 import java.util.Date;
 import java.util.List;

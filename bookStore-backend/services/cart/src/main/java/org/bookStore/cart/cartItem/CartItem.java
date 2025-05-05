@@ -1,7 +1,8 @@
-package org.bookStore.cart;
+package org.bookStore.cart.cartItem;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.bookStore.cart.cart.Cart;
 
 @AllArgsConstructor
 @NoArgsConstructor
