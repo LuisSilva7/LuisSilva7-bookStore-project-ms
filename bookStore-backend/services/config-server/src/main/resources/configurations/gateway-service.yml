@@ -23,14 +23,26 @@ spring:
           uri: lb:http://BOOK-SERVICE
           predicates:
             - Path=/api/v1/books/**
+        - id: category-service
+          uri: lb:http://CATEGORY-SERVICE
+          predicates:
+            - Path=/api/v1/categories/**
         - id: cart-service
           uri: lb:http://CART-SERVICE
           predicates:
             - Path=/api/v1/carts/**
-        - id: order-service
-          uri: lb:http://ORDER-SERVICE
+        - id: cart-items-service
+          uri: lb:http://CART-ITEMS-SERVICE
           predicates:
-            - Path=/api/v1/orders/**
+            - Path=/api/v1/cart-items/**
+        - id: order-details-service
+          uri: lb:http://ORDER-DETAILS-SERVICE
+          predicates:
+            - Path=/api/v1/order-details/**
+        - id: shipping-service
+          uri: lb:http://SHIPPING-SERVICE
+          predicates:
+            - Path=/api/v1/shippings/**
         - id: user-service
           uri: lb:http://USER-SERVICE
           predicates:

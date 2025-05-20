@@ -16,6 +16,5 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             "b.subcategory.name LIKE %:query%)")
     List<Book> searchBooks(@Param("query") String query);
 
-
     List<Book> findByCategoryId(Long id);
 }
