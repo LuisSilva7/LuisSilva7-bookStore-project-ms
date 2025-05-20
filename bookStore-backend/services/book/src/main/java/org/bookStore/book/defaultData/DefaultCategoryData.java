@@ -1,12 +1,10 @@
 package org.bookStore.book.defaultData;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.bookStore.book.category.Category;
 import org.bookStore.book.category.SubCategory;
 import org.bookStore.book.category.CategoryRepository;
 import org.bookStore.book.category.SubCategoryRepository;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
@@ -14,14 +12,12 @@ import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
-public class DefaultCategoryData implements CommandLineRunner {
+public class DefaultCategoryData {
 
     private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
 
-    @Override
-    @Transactional
-    public void run(String... args) {
+    public void categoryData() {
 
         if (categoryRepository.count() == 0 && subCategoryRepository.count() == 0) {
 

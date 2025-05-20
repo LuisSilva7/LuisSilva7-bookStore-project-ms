@@ -1,5 +1,6 @@
 package org.bookStore.book.book;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.bookStore.book.author.Author;
@@ -37,10 +38,12 @@ public class Book {
     private int quantity;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "author_id")
     private Author author;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "category_id")
     private Category category;
 }

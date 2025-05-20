@@ -1,10 +1,8 @@
 package org.bookStore.cart.defaultData;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.bookStore.cart.cart.Cart;
 import org.bookStore.cart.cart.CartRepository;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDate;
@@ -12,13 +10,11 @@ import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
-public class DefaultCartData implements CommandLineRunner {
+public class DefaultCartData {
 
     private final CartRepository cartRepository;
 
-    @Override
-    @Transactional
-    public void run(String... args) {
+    public void cartData() {
 
         if (cartRepository.count() == 0) {
 

@@ -1,26 +1,22 @@
 package org.bookStore.cart.defaultData;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.bookStore.cart.cart.Cart;
 import org.bookStore.cart.cart.CartRepository;
 import org.bookStore.cart.cartItem.CartItem;
 import org.bookStore.cart.cartItem.CartItemRepository;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
-public class DefaultCartItemData implements CommandLineRunner {
+public class DefaultCartItemData {
 
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
 
-    @Override
-    @Transactional
-    public void run(String... args) {
+    public void cartItemData() {
 
         if (cartItemRepository.count() == 0) {
 

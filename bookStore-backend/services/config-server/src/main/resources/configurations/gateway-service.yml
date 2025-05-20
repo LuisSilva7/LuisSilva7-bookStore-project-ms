@@ -5,7 +5,7 @@ spring:
         corsConfigurations:
           '[/**]':
             allowedOrigins:
-              - "http://localhost:5173"
+              - "*"
             allowedMethods:
               - "GET"
               - "POST"
@@ -24,7 +24,7 @@ spring:
           predicates:
             - Path=/api/v1/books/**
         - id: category-service
-          uri: lb:http://CATEGORY-SERVICE
+          uri: lb:http://BOOK-SERVICE
           predicates:
             - Path=/api/v1/categories/**
         - id: cart-service
@@ -32,7 +32,7 @@ spring:
           predicates:
             - Path=/api/v1/carts/**
         - id: cart-items-service
-          uri: lb:http://CART-ITEMS-SERVICE
+          uri: lb:http://CART-SERVICE
           predicates:
             - Path=/api/v1/cart-items/**
         - id: order-service
@@ -40,7 +40,7 @@ spring:
           predicates:
             - Path=/api/v1/orders/**
         - id: order-details-service
-          uri: lb:http://ORDER-DETAILS-SERVICE
+          uri: lb:http://ORDER-SERVICE
           predicates:
             - Path=/api/v1/order-details/**
         - id: shipping-service

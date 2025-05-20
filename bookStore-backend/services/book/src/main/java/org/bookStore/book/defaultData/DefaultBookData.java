@@ -1,6 +1,5 @@
 package org.bookStore.book.defaultData;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.bookStore.book.author.Author;
 import org.bookStore.book.author.AuthorRepository;
@@ -8,22 +7,19 @@ import org.bookStore.book.book.Book;
 import org.bookStore.book.book.BookRepository;
 import org.bookStore.book.category.Category;
 import org.bookStore.book.category.CategoryRepository;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
-public class DefaultBookData implements CommandLineRunner {
+public class DefaultBookData {
 
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final CategoryRepository categoryRepository;
 
-    @Override
-    @Transactional
-    public void run(String... args) {
+    public void bookData() {
 
         if (bookRepository.count() == 0) {
 

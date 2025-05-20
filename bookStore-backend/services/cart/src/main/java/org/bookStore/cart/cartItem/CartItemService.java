@@ -13,7 +13,7 @@ public class CartItemService {
         return cartItemRepository.save(cartItem);
     }
 
-    public CartItem getCartItemByID(Long id) {
+    public CartItem getCartItemById(Long id) {
         CartItem item = cartItemRepository.findById(id).orElse(null);
         item.setSubTotal(item.getSubTotal());
         return item;

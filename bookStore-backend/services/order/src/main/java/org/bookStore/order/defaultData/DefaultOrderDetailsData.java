@@ -1,26 +1,22 @@
 package org.bookStore.order.defaultData;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.bookStore.order.order.Order;
 import org.bookStore.order.order.OrderRepository;
 import org.bookStore.order.orderDetails.OrderDetails;
 import org.bookStore.order.orderDetails.OrderDetailsRepository;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
-public class DefaultOrderDetailsData implements CommandLineRunner {
+public class DefaultOrderDetailsData {
 
     private final OrderRepository orderRepository;
     private final OrderDetailsRepository orderDetailsRepository;
 
-    @Override
-    @Transactional
-    public void run(String... args) {
+    public void orderDetailsData() {
 
         if (orderDetailsRepository.count() == 0) {
 

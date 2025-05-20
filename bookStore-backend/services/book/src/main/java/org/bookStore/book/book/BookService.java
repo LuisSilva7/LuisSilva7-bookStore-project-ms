@@ -26,7 +26,7 @@ public class BookService {
     }
 
     public List<Book> getBooksByCategoryId(Long categoryId) {
-        return bookRepository.findByCategoryId(categoryId);
+        return bookRepository.findByCategory_CategoryId(categoryId);
     }
 
     public Book updateBookQuantity(Long id, Book bookData) {
@@ -42,6 +42,6 @@ public class BookService {
     }
 
     public List<Book> getBooksByAuthorId(Long authorId) {
-        return bookRepository.findAllBooksByAuthorId(authorId);
+        return bookRepository.findAllByAuthor_AuthorId(authorId);
     }
 }
