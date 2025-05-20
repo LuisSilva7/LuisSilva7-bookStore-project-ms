@@ -13,32 +13,30 @@ import java.util.List;
 public class CartController {
 
     private final CartService cartService;
-    // private UserRepository userRepository;
 
-    @PostMapping("/cart")
-    public ResponseEntity<Cart> createCart(@RequestBody Cart createCart){
-        Cart updatedCart = cartService.createCart(createCart);
-
-        return new ResponseEntity<>(updatedCart, HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<Cart> createCart(@RequestBody Cart cart) {
+        Cart createdCart = cartService.createCart(cart);
+        return new ResponseEntity<>(createdCart, HttpStatus.CREATED);
     }
 
-    @GetMapping("/cart")
-    public ResponseEntity<List<Cart>> getAllCart(){
-
-        List<Cart> existCart = cartService.getAllCart();
-
-        return new ResponseEntity<>(existCart, HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<Cart>> getAllCarts() {
+        List<Cart> carts = cartService.getAllCart();
+        return ResponseEntity.ok(carts);
     }
 
-    @GetMapping("/cart/{userId}")
-    public ResponseEntity<Cart> getCartIDByUserID(@PathVariable Long userID){
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Cart> getCartByUserId(@PathVariable Long userId) {
+        Cart cart = cartService.getCartIDByUserId(userId);
+        return (cart != null)
+                ? ResponseEntity.ok(cart)
+                : ResponseEntity.notFound().build();
+    }
 
-        Cart cartID = cartService.getCartIDByUserID(userID);
-
-        if (cartID != null) {
-            return new ResponseEntity<>(cartID, HttpStatus.OK);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @DeleteMapping("/clear/{cartId}")
+    public ResponseEntity<String> clearCart(@PathVariable Long cartId) {
+        cartService.clearCart(cartId);
+        return ResponseEntity.ok("Cart cleared with success (cartId: " + cartId + ").");
     }
 }

@@ -1,4 +1,4 @@
-package org.bookStore.user;
+package org.bookStore.user.user;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,7 +14,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long userID;
+    private Long userId;
 
     @Column
     private String fullName;

@@ -1,4 +1,4 @@
-package org.bookStore.user;
+package org.bookStore.user.user;
 
 import lombok.Data;
 

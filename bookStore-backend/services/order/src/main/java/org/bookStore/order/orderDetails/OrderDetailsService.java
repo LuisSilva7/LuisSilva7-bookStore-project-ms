@@ -3,13 +3,15 @@ package org.bookStore.order.orderDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class OrderDetailsService {
 
     private final OrderDetailsRepository orderDetailsRepository;
 
-    public OrderDetails createOrderDetails(OrderDetails orderDetails){
-        return orderDetailsRepository.save(orderDetails);
+    public List<OrderDetails> getOrderDetailsByOrderId(Long orderId) {
+        return orderDetailsRepository.findOrderDetailsByOrderId(orderId);
     }
 }

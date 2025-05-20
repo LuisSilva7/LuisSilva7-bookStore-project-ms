@@ -3,11 +3,11 @@ package org.bookStore.book.category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("/api/v1/categories")
@@ -16,10 +16,15 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/category")
-    public ResponseEntity<List<Category>> getAllCategory(){
-        List<Category> categories = categoryService.getAllCategory();
+    @PostMapping
+    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+        Category savedCategory = categoryService.createCategory(category);
+        return new ResponseEntity<>(savedCategory, CREATED);
+    }
 
+    @GetMapping
+    public ResponseEntity<List<Category>> getAllCategories() {
+        List<Category> categories = categoryService.getAllCategories();
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 }

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.bookStore.order.orderDetails.OrderDetails;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -18,10 +18,10 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
-    private Long orderID;
+    private Long orderId;
 
     @Column
-    private Date orderDate;
+    private LocalDateTime orderDate;
 
     @Column
     private double totalPrice;

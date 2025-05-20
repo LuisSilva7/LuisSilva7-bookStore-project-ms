@@ -10,9 +10,12 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private final SubCategoryRepository subCategoryRepository;
 
-    public List<Category> getAllCategory() {
-        return null;
+    public Category createCategory(Category category) {
+        return categoryRepository.save(category);
+    }
+
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
     }
 }

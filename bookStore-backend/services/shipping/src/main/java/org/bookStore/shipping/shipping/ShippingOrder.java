@@ -14,7 +14,7 @@ public class ShippingOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "shipping_order_id")
-    private Long shippingOrderID;
+    private Long shippingOrderId;
 
     @Column
     private String firstName;
@@ -31,6 +31,9 @@ public class ShippingOrder {
     @Column
     private String email;
 
-    @Column
-    private String postal_code;
+    @Column(name = "postal_code")
+    private String postalCode;
+
+    @Column(name = "order_id")
+    private Long orderId;
 }

@@ -1,12 +1,10 @@
 package org.bookStore.order.orderDetails;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/order-details")
@@ -15,12 +13,9 @@ public class OrderDetailsController {
 
     private final OrderDetailsService orderDetailsService;
 
-    @PostMapping("/order-details")
-    public ResponseEntity<OrderDetails> createOrderDetails(@RequestBody OrderDetails orderDetails){
-
-        OrderDetails orderedDetails = orderDetailsService.createOrderDetails(orderDetails);
-
-        return new ResponseEntity<>(orderedDetails, HttpStatus.CREATED);
-
+    @GetMapping("/order/{orderId}")
+    public ResponseEntity<List<OrderDetails>> getOrderDetailsByOrderId(@PathVariable Long orderId) {
+        List<OrderDetails> details = orderDetailsService.getOrderDetailsByOrderId(orderId);
+        return ResponseEntity.ok(details);
     }
 }

@@ -1,4 +1,4 @@
-package org.bookStore.user;
+package org.bookStore.user.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserRepository userRepository;
+    /*private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -91,5 +91,8 @@ public class UserController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
+    }*/
+
+    //falta recuperar senha
+    //gerir o perfil - ver as suas infos
 }

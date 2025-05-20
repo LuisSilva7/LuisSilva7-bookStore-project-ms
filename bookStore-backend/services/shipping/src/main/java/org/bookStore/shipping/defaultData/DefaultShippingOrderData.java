@@ -1,0 +1,53 @@
+package org.bookStore.shipping.defaultData;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.bookStore.shipping.shipping.ShippingOrder;
+import org.bookStore.shipping.shipping.ShippingOrderRepository;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
+
+@Configuration
+@RequiredArgsConstructor
+public class DefaultShippingOrderData implements CommandLineRunner {
+
+    private final ShippingOrderRepository shippingOrderRepository;
+
+    @Override
+    @Transactional
+    public void run(String... args) {
+
+        if (shippingOrderRepository.count() == 0) {
+
+            List<ShippingOrder> shippingOrders = List.of(
+                    ShippingOrder.builder()
+                            .firstName("Joana")
+                            .lastName("Ribeiro")
+                            .address("Rua Central 123")
+                            .city("Braga")
+                            .email("joana@example.com")
+                            .postalCode("4700-000")
+                            .orderId(1L)
+                            .build(),
+
+                    ShippingOrder.builder()
+                            .firstName("Pedro")
+                            .lastName("Gomes")
+                            .address("Avenida Liberdade 45")
+                            .city("Porto")
+                            .email("pedro@example.com")
+                            .postalCode("4000-001")
+                            .orderId(2L)
+                            .build()
+            );
+
+            shippingOrderRepository.saveAll(shippingOrders);
+
+            System.out.println("Default shipping orders were created!");
+        } else {
+            System.out.println("Default shipping orders already exist!");
+        }
+    }
+}

@@ -14,17 +14,15 @@ public class ShippingOrderController {
 
     private final ShippingOrderService shippingOrderService;
 
-    @PostMapping("/shipping")
-    public ResponseEntity<ShippingOrder> createShippingOrder(@RequestBody ShippingOrder shippingOrder){
-        ShippingOrder shippedOrder = shippingOrderService.createShippingOrder(shippingOrder);
-
-        return new ResponseEntity<>(shippedOrder, HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<ShippingOrder> createShippingOrder(@RequestBody ShippingOrder shippingOrder) {
+        ShippingOrder createdShippingOrder = shippingOrderService.createShippingOrder(shippingOrder);
+        return new ResponseEntity<>(createdShippingOrder, HttpStatus.CREATED);
     }
 
-    @GetMapping("/shipping")
-    public ResponseEntity<List<ShippingOrder>> getAllShippingOrders(){
-        List<ShippingOrder> shippedOrder = shippingOrderService.getAllShippingOrders();
-
-        return new ResponseEntity<>(shippedOrder,HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<ShippingOrder>> getAllShippingOrders() {
+        List<ShippingOrder> shippingOrders = shippingOrderService.getAllShippingOrders();
+        return ResponseEntity.ok(shippingOrders);
     }
 }

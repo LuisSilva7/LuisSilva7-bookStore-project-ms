@@ -31,5 +31,10 @@ public class CartItem {
     private Cart cart;
 
     @Column(name = "book_id")
-    private Long bookID;
+    private Long bookId;
+
+    @Transient
+    public Double getSubTotal() {
+        return unitPrice * quantity;
+    }
 }
