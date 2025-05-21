@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/bookStore-backend/services/book/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/bookStore-backend/services/cart/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bookStore-backend/services/composition/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/bookStore-backend/services/config-server/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/bookStore-backend/services/discovery/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/bookStore-backend/services/gateway/src/main/java" charset="UTF-8" />

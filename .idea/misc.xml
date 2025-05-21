@@ -12,6 +12,7 @@
         <option value="$PROJECT_DIR$/bookStore-backend/services/discovery/pom.xml" />
         <option value="$PROJECT_DIR$/bookStore-backend/services/config-server/pom.xml" />
         <option value="$PROJECT_DIR$/bookStore-backend/services/shipping/pom.xml" />
+        <option value="$PROJECT_DIR$/bookStore-backend/services/composition/pom.xml" />
       </list>
     </option>
   </component>
