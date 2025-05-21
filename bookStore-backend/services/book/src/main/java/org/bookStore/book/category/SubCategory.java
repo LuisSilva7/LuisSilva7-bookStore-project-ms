@@ -1,5 +1,6 @@
 package org.bookStore.book.category;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class SubCategory {
     private String name;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name="category_id")
     private Category category;
 }

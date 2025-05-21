@@ -19,7 +19,7 @@ public class CartItemService {
         return item;
     }
 
-    public CartItem updateCartQuantity(Long id, CartItem cartItem) {
+    public CartItem updateCartItemQuantity(Long id, CartItem cartItem) {
         CartItem existingItem = cartItemRepository.findById(id).orElse(null);
 
         if (existingItem != null) {

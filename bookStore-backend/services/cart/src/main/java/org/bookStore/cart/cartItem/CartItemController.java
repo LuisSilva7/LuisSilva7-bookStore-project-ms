@@ -27,8 +27,8 @@ public class CartItemController {
     }
 
     @PatchMapping("/quantity/{id}")
-    public ResponseEntity<CartItem> updateCartQuantity(@PathVariable Long id, @RequestBody CartItem cartItem) {
-        CartItem updatedItem = cartItemService.updateCartQuantity(id, cartItem);
+    public ResponseEntity<CartItem> updateCartItemQuantity(@PathVariable Long id, @RequestBody CartItem cartItem) {
+        CartItem updatedItem = cartItemService.updateCartItemQuantity(id, cartItem);
         return new ResponseEntity<>(updatedItem, HttpStatus.OK);
     }
 

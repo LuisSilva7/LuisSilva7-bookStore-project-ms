@@ -1,5 +1,6 @@
 package org.bookStore.order.orderDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.bookStore.order.order.Order;
@@ -30,6 +31,7 @@ public class OrderDetails {
     private Long bookId;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "order_id")
     private Order order;
 }

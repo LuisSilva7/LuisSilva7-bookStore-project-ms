@@ -1,5 +1,6 @@
 package org.bookStore.cart.cartItem;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.bookStore.cart.cart.Cart;
@@ -27,8 +28,9 @@ public class CartItem {
     private Double subTotal;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "cart_id")
-    private Cart cart;
+    private Cart cartId;
 
     @Column(name = "book_id")
     private Long bookId;
