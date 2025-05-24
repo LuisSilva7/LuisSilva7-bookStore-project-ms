@@ -15,8 +15,8 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping
-    public ResponseEntity<Cart> createCart(@RequestBody Cart cart) {
-        Cart createdCart = cartService.createCart(cart);
+    public ResponseEntity<Cart> createCart(@RequestBody CartRequest request) {
+        Cart createdCart = cartService.createCart(request.getUserId());
         return new ResponseEntity<>(createdCart, HttpStatus.CREATED);
     }
 
@@ -34,9 +34,9 @@ public class CartController {
                 : ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/clear/{cartId}")
-    public ResponseEntity<String> clearCart(@PathVariable Long cartId) {
-        cartService.clearCart(cartId);
-        return ResponseEntity.ok("Cart cleared with success (cartId: " + cartId + ").");
+    @DeleteMapping("/clear")
+    public ResponseEntity<String> clearCart(@RequestHeader("x-userid") Long userId) {
+        cartService.clearCart(userId);
+        return ResponseEntity.ok("Cart cleared with success.");
     }
 }

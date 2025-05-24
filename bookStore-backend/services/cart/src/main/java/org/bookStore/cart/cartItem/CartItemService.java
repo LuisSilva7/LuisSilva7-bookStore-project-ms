@@ -1,6 +1,8 @@
 package org.bookStore.cart.cartItem;
 
 import lombok.RequiredArgsConstructor;
+import org.bookStore.cart.cart.Cart;
+import org.bookStore.cart.cart.CartRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -8,10 +10,20 @@ import org.springframework.stereotype.Service;
 public class CartItemService {
 
     private final CartItemRepository cartItemRepository;
+    private final CartRepository cartRepository;
 
-    public CartItem createCartItem(CartItem cartItem) {
+    public CartItem createCartItem(Long userId, CartItem cartItem) {
+        Cart cart = cartRepository.findByUserId(userId);
+
+        cartItem.setCart(cart);
+
+        if (cartItem.getUnitPrice() != null && cartItem.getQuantity() > 0) {
+            cartItem.setSubTotal(cartItem.getUnitPrice() * cartItem.getQuantity());
+        }
+
         return cartItemRepository.save(cartItem);
     }
+
 
     public CartItem getCartItemById(Long id) {
         CartItem item = cartItemRepository.findById(id).orElse(null);
@@ -19,18 +31,27 @@ public class CartItemService {
         return item;
     }
 
-    public CartItem updateCartItemQuantity(Long id, CartItem cartItem) {
-        CartItem existingItem = cartItemRepository.findById(id).orElse(null);
+    public CartItem updateCartItemQuantity(Long userId, CartItem cartItem) {
+        Cart cart = cartRepository.findByUserId(userId);
 
-        if (existingItem != null) {
-            existingItem.setQuantity(cartItem.getQuantity());
-            return cartItemRepository.save(existingItem);
+        for(CartItem item : cart.getCartItems()) {
+            if(item.getCartItemId().equals(cartItem.getCartItemId())) {
+                item.setQuantity(cartItem.getQuantity());
+                item.setSubTotal(item.getUnitPrice() * item.getQuantity());
+                return cartItemRepository.save(item);
+            }
         }
 
         return null;
     }
 
-    public void deleteCartItemById(Long id) {
-        cartItemRepository.deleteById(id);
+    public void deleteCartItemById(Long userId, Long id) {
+        Cart cart = cartRepository.findByUserId(userId);
+
+        for(CartItem item : cart.getCartItems()) {
+            if(item.getCartItemId().equals(id)) {
+                cartItemRepository.deleteById(id);
+            }
+        }
     }
 }

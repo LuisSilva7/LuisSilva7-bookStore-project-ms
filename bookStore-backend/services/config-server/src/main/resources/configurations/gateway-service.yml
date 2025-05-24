@@ -46,7 +46,7 @@ spring:
         - id: user-service
           uri: lb:http://USER-SERVICE
           predicates:
-            - Path=/api/v1/users/**
+            - Path=/auth/**
 
 server:
   port: 8222

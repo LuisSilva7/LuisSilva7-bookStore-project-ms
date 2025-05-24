@@ -2,8 +2,8 @@ package org.bookStore.user.defaultData;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.bookStore.user.user.User;
-import org.bookStore.user.user.UserRepository;
+import org.bookStore.user.user.auth.User;
+import org.bookStore.user.user.auth.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,17 +23,17 @@ public class DefaultUserData implements CommandLineRunner {
 
             List<User> users = List.of(
                     User.builder()
-                            .fullName("Joana Ribeiro")
+                            .fullname("Joana Ribeiro")
+                            .email("joana@example.com")
                             .username("joana")
                             .password("12345")
-                            .email("joana@example.com")
                             .build(),
 
                     User.builder()
-                            .fullName("Pedro Gomes")
+                            .fullname("Pedro Gomes")
+                            .email("pedro@example.com")
                             .username("pedrog")
                             .password("12345")
-                            .email("pedro@example.com")
                             .build()
             );
 

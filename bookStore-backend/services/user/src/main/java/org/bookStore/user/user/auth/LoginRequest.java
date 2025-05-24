@@ -1,9 +1,9 @@
-package org.bookStore.user.user;
+package org.bookStore.user.user.auth;
 
 import lombok.Data;
 
 @Data
-public class LoginDTO {
+public class LoginRequest {
     private String username;
     private String password;
 }

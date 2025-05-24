@@ -1,6 +1,12 @@
-package org.bookStore.composition;
+package org.bookStore.composition.addCartItem;
 
 import lombok.RequiredArgsConstructor;
+import org.bookStore.composition.addCartItem.book.BookClient;
+import org.bookStore.composition.addCartItem.book.BookResponse;
+import org.bookStore.composition.addCartItem.cart.CartClient;
+import org.bookStore.composition.addCartItem.cart.CartResponse;
+import org.bookStore.composition.addCartItem.cartItem.CartItemClient;
+import org.bookStore.composition.addCartItem.cartItem.CartItemResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -8,26 +14,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/composition/cart")
+@RequestMapping("/composition/cart/items")
 @RequiredArgsConstructor
 public class CartCompositionController {
 
-    private final ProductClient productClient;
+    private final BookClient bookClient;
     private final CartClient cartClient;
     private final CartItemClient cartItemClient;
 
-    @PostMapping("/add")
-    public ResponseEntity<?> addToCart(@RequestBody AddToCartRequest request) {
+    @PostMapping
+    public ResponseEntity<?> addToCart(@RequestBody AddCartItemRequest request) {
         // 1. Verifica se o produto existe
-        ProductDTO product;
+        BookResponse bookResponse;
         try {
-            product = productClient.getBookById(request.bookId());
+            bookResponse = bookClient.getBookById(request.bookId());
         } catch (Exception e) {
             return ResponseEntity.status(404).body("Book does not exist.");
         }
 
         // 2. Verifica stock
-        if (product.stock() < request.quantity()) {
+        if (bookResponse.stock() < request.quantity()) {
             return ResponseEntity.badRequest().body("Stock is lower than quantity asked for.");
         }
 
@@ -39,13 +45,13 @@ public class CartCompositionController {
         }
 
         // 4. Vai buscar carrinho atualizado
-        CartDTO cart = cartClient.getCartByUserId(request.userId());
+        CartResponse cart = cartClient.getCartByUserId(request.userId());
 
-        // 5. Enriquecer carrinho com dados dos produtos
+        // 5. Enriquecer carrinho com dados de todos os produtos
         double total = 0.0;
-        for (CartItemDTO item : cart.items()) {
-            ProductDTO p = productClient.getBookById(item.bookId());
-            item.title(p.title());
+        for (CartItemResponse item : cart.items()) {
+            BookResponse b = bookClient.getBookById(item.bookId());
+            item.title(b.title());
             item.setPrice(p.getPrice());
             item.setTotal(p.getPrice() * item.getQuantity());
             total += item.getTotal();

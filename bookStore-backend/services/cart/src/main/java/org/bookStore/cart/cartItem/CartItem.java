@@ -16,7 +16,7 @@ public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cart_item_id")
-    private Long cartItemID;
+    private Long cartItemId;
 
     @Column
     private int quantity;
@@ -30,7 +30,7 @@ public class CartItem {
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "cart_id")
-    private Cart cartId;
+    private Cart cart;
 
     @Column(name = "book_id")
     private Long bookId;

@@ -1,4 +1,4 @@
-package org.bookStore.user.user;
+package org.bookStore.user.user.auth;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,14 +17,14 @@ public class User {
     private Long userId;
 
     @Column
-    private String fullName;
+    private String fullname;
+
+    @Column(unique = true)
+    private String email;
 
     @Column(unique = true)
     private String username;
 
     @Column
     private String password;
-
-    @Column(unique = true)
-    private String email;
 }

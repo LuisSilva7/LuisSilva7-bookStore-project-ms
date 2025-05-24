@@ -1,5 +1,6 @@
-package org.bookStore.composition;
+package org.bookStore.composition.addCartItem.cartItem;
 
+import org.bookStore.composition.addCartItem.AddCartItemRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,5 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface CartItemClient {
 
     @PostMapping
-    void createCartItem(@RequestBody AddToCartRequest request);
+    void createCartItem(@RequestBody AddCartItemRequest request);
 }
+

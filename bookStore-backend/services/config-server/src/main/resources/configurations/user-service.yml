@@ -15,3 +15,7 @@ spring:
 
 server:
   port: 8050
+
+application:
+  config:
+    cart-url: http://localhost:8222/api/v1/carts

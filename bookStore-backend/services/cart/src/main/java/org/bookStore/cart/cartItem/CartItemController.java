@@ -13,8 +13,9 @@ public class CartItemController {
     private final CartItemService cartItemService;
 
     @PostMapping
-    public ResponseEntity<CartItem> createCartItem(@RequestBody CartItem cartItem) {
-        CartItem createdCartItem = cartItemService.createCartItem(cartItem);
+    public ResponseEntity<CartItem> createCartItem(@RequestHeader("x-userid") Long userId,
+                                                   @RequestBody CartItem cartItem) {
+        CartItem createdCartItem = cartItemService.createCartItem(userId, cartItem);
         return new ResponseEntity<>(createdCartItem, HttpStatus.CREATED);
     }
 
@@ -26,15 +27,17 @@ public class CartItemController {
                 : ResponseEntity.notFound().build();
     }
 
-    @PatchMapping("/quantity/{id}")
-    public ResponseEntity<CartItem> updateCartItemQuantity(@PathVariable Long id, @RequestBody CartItem cartItem) {
-        CartItem updatedItem = cartItemService.updateCartItemQuantity(id, cartItem);
+    @PatchMapping("/quantity")
+    public ResponseEntity<CartItem> updateCartItemQuantity(@RequestHeader("x-userid") Long userId,
+                                                           @RequestBody CartItem cartItem) {
+        CartItem updatedItem = cartItemService.updateCartItemQuantity(userId, cartItem);
         return new ResponseEntity<>(updatedItem, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteCartItemById(@PathVariable Long id) {
-        cartItemService.deleteCartItemById(id);
+    public ResponseEntity<Void> deleteCartItemById(@RequestHeader("x-userid") Long userId,
+                                                   @PathVariable Long id) {
+        cartItemService.deleteCartItemById(userId, id);
         return ResponseEntity.noContent().build();
     }
 }

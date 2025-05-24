@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -13,8 +14,12 @@ public class CartService {
 
     private final CartRepository cartRepository;
 
-    public Cart createCart(Cart cart) {
+    public Cart createCart(Long userId) {
+        Cart cart = new Cart();
+        cart.setUserId(userId);
         cart.setCreatedDate(LocalDate.now());
+        cart.setCartItems(new ArrayList<>());
+
         return cartRepository.save(cart);
     }
 
@@ -27,8 +32,8 @@ public class CartService {
     }
 
     @Transactional
-    public void clearCart(Long cartId) {
-        Cart cart = cartRepository.findById(cartId).orElse(null);
+    public void clearCart(Long userId) {
+        Cart cart = cartRepository.findByUserId(userId);
 
         if (cart != null) {
             cart.getCartItems().clear();

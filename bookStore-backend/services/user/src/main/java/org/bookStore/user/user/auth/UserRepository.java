@@ -1,4 +1,4 @@
-package org.bookStore.user.user;
+package org.bookStore.user.user.auth;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
