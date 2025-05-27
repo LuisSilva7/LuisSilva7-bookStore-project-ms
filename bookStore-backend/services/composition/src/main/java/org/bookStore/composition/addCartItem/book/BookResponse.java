@@ -4,6 +4,6 @@ public record BookResponse (
         Long id,
         String title,
         double price,
-        int stock
+        int quantity
 ) {
 }

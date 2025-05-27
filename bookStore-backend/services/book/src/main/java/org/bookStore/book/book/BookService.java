@@ -32,7 +32,6 @@ public class BookService {
     public Book updateBookQuantity(Long id, Book bookData) {
         Book existingBook = bookRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Cannot update quantity. Book not found with Id: " + id));
-
         existingBook.setQuantity(bookData.getQuantity());
         return bookRepository.save(existingBook);
     }

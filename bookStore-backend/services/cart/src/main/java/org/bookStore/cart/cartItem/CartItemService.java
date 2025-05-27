@@ -5,6 +5,8 @@ import org.bookStore.cart.cart.Cart;
 import org.bookStore.cart.cart.CartRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CartItemService {
@@ -15,14 +17,34 @@ public class CartItemService {
     public CartItem createCartItem(Long userId, CartItem cartItem) {
         Cart cart = cartRepository.findByUserId(userId);
 
-        cartItem.setCart(cart);
+        Optional<CartItem> existingItemOpt = cartItemRepository.findByCart_CartIdAndBookId(cart.getCartId(), cartItem.getBookId());
 
-        if (cartItem.getUnitPrice() != null && cartItem.getQuantity() > 0) {
-            cartItem.setSubTotal(cartItem.getUnitPrice() * cartItem.getQuantity());
+        CartItem itemToSave;
+
+        if (existingItemOpt.isPresent()) {
+            CartItem existingItem = existingItemOpt.get();
+
+            int newQuantity = existingItem.getQuantity() + cartItem.getQuantity();
+            existingItem.setQuantity(newQuantity);
+
+            if (existingItem.getUnitPrice() != null) {
+                existingItem.setSubTotal(existingItem.getUnitPrice() * newQuantity);
+            }
+
+            itemToSave = existingItem;
+        } else {
+            cartItem.setCart(cart);
+
+            if (cartItem.getUnitPrice() != null && cartItem.getQuantity() > 0) {
+                cartItem.setSubTotal(cartItem.getUnitPrice() * cartItem.getQuantity());
+            }
+
+            itemToSave = cartItem;
         }
 
-        return cartItemRepository.save(cartItem);
+        return cartItemRepository.save(itemToSave);
     }
+
 
 
     public CartItem getCartItemById(Long id) {

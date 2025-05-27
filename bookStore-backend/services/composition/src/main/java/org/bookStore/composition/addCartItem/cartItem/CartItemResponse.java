@@ -1,11 +1,12 @@
 package org.bookStore.composition.addCartItem.cartItem;
 
-public record CartItemResponse(
-        Long bookId,
-        int quantity,
+import lombok.Data;
 
-        String title,
-        double price,
-        double total
-) {
+@Data
+public class CartItemResponse {
+    private Long bookId;
+    private String title;
+    private int quantity;
+    private Double unitPrice;
+    private Double subTotal;
 }

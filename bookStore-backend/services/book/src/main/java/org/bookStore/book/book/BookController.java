@@ -41,9 +41,11 @@ public class BookController {
         return ResponseEntity.ok(books);
     }
 
-    @PatchMapping("/update-quantity/{id}")
+    @PutMapping("/update-quantity/{id}")
     public ResponseEntity<Book> updateBookQuantity(@PathVariable("id") Long id, @RequestBody Book book) {
+        System.out.println("LIVRO NO CONTROLLER  " + book);
         Book updated = bookService.updateBookQuantity(id, book);
+
         return (updated != null)
                 ? ResponseEntity.ok(updated)
                 : ResponseEntity.notFound().build();

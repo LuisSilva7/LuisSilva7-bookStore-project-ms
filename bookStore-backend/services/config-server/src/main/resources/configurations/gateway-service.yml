@@ -47,6 +47,10 @@ spring:
           uri: lb:http://USER-SERVICE
           predicates:
             - Path=/auth/**
+        - id: composition-service
+          uri: lb:http://COMPOSITION-SERVICE
+          predicates:
+            - Path=/composition/**
 
 server:
   port: 8222
