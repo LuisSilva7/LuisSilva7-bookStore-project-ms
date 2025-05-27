@@ -1,6 +1,7 @@
 package org.bookStore.order.order;
 
 import lombok.RequiredArgsConstructor;
+import org.bookStore.order.order.kafka.OrderCreatedEvent;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +16,15 @@ public class OrderService {
         if (order.getOrderDetails() != null) {
             order.getOrderDetails().forEach(detail -> detail.setOrder(order));
         }
-        return orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+
+        OrderCreatedEvent event = new OrderCreatedEvent(
+                savedOrder.getOrderId(),
+                savedOrder.getOrderDate(),
+                savedOrder.getStatus()
+        );
+
+        kafkaProducerService.sendOrderCreatedEvent(event);
     }
 
     public List<Order> getAllOrders() {
