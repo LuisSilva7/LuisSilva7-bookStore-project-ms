@@ -11,7 +11,7 @@
         <module name="gateway" />
         <module name="discovery" />
       </profile>
-      <profile name="Annotation profile for user" enabled="true">
+      <profile name="Annotation profile for order-query" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -19,11 +19,12 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
         </processorPath>
         <module name="shipping" />
-        <module name="user" />
         <module name="composition" />
+        <module name="order-query" />
+        <module name="book" />
+        <module name="user" />
         <module name="cart" />
         <module name="order" />
-        <module name="book" />
       </profile>
     </annotationProcessing>
   </component>
@@ -36,6 +37,7 @@
       <module name="discovery" options="-parameters" />
       <module name="gateway" options="-parameters" />
       <module name="order" options="-parameters" />
+      <module name="order-query" options="-parameters" />
       <module name="shipping" options="-parameters" />
       <module name="user" options="-parameters" />
     </option>
