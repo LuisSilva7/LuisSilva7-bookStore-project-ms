@@ -19,7 +19,7 @@ public class OrderService {
         Order savedOrder = orderRepository.save(order);
 
         OrderCreatedEvent event = new OrderCreatedEvent(
-                savedOrder.getOrderId(),
+                savedOrder.getId(),
                 savedOrder.getOrderDate(),
                 savedOrder.getStatus()
         );

@@ -17,7 +17,8 @@ public class CartItemService {
     public CartItem createCartItem(Long userId, CartItem cartItem) {
         Cart cart = cartRepository.findByUserId(userId);
 
-        Optional<CartItem> existingItemOpt = cartItemRepository.findByCart_CartIdAndBookId(cart.getCartId(), cartItem.getBookId());
+        Optional<CartItem> existingItemOpt = cartItemRepository
+                .findByCart_IdAndBookId(cart.getId(), cartItem.getBookId());
 
         CartItem itemToSave;
 
@@ -57,7 +58,7 @@ public class CartItemService {
         Cart cart = cartRepository.findByUserId(userId);
 
         for(CartItem item : cart.getCartItems()) {
-            if(item.getCartItemId().equals(cartItem.getCartItemId())) {
+            if(item.getId().equals(cartItem.getId())) {
                 item.setQuantity(cartItem.getQuantity());
                 item.setSubTotal(item.getUnitPrice() * item.getQuantity());
                 return cartItemRepository.save(item);
@@ -71,7 +72,7 @@ public class CartItemService {
         Cart cart = cartRepository.findByUserId(userId);
 
         for(CartItem item : cart.getCartItems()) {
-            if(item.getCartItemId().equals(id)) {
+            if(item.getId().equals(id)) {
                 cartItemRepository.deleteById(id);
             }
         }

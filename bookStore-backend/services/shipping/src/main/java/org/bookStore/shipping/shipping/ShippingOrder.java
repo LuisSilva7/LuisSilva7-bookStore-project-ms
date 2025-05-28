@@ -13,8 +13,7 @@ public class ShippingOrder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "shipping_order_id")
-    private Long shippingOrderId;
+    private Long id;
 
     @Column
     private String firstName;

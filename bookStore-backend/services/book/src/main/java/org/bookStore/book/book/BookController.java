@@ -43,7 +43,6 @@ public class BookController {
 
     @PutMapping("/update-quantity/{id}")
     public ResponseEntity<Book> updateBookQuantity(@PathVariable("id") Long id, @RequestBody Book book) {
-        System.out.println("LIVRO NO CONTROLLER  " + book);
         Book updated = bookService.updateBookQuantity(id, book);
 
         return (updated != null)
@@ -57,8 +56,8 @@ public class BookController {
         return ResponseEntity.ok(results);
     }
 
-    @GetMapping("/author/{authorId}")
-    public ResponseEntity<List<Book>> getBooksByAuthor(@PathVariable Long authorId) {
+    @GetMapping("/author/{id}")
+    public ResponseEntity<List<Book>> getBooksByAuthor(@PathVariable("id") Long authorId) {
         List<Book> books = bookService.getBooksByAuthorId(authorId);
         return ResponseEntity.ok(books);
     }

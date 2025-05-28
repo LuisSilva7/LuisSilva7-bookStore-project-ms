@@ -27,8 +27,8 @@ public class AuthenticationFilter implements GlobalFilter {
         String method = request.getMethod().name();
 
         if (
-                path.equals("/auth/login") ||
-                        path.equals("/auth/register") ||
+                path.equals("/api/v1/auth/login") ||
+                        path.equals("/api/v1/auth/register") ||
                         (path.equals("/api/v1/carts") && method.equalsIgnoreCase("POST"))
         ) {
             return chain.filter(exchange);

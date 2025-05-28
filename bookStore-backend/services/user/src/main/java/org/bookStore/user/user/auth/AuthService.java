@@ -22,7 +22,6 @@ public class AuthService {
                 .username(request.getUsername()).password(request.getPassword()).build();
         userRepository.save(user);
 
-        System.out.println("ID DO USER CRIADO: " + user.getUserId());
         cartClient.createCart(new CartRequest(user.getUserId()));
     }
 

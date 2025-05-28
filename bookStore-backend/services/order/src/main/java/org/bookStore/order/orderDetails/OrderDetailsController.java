@@ -13,8 +13,8 @@ public class OrderDetailsController {
 
     private final OrderDetailsService orderDetailsService;
 
-    @GetMapping("/order/{orderId}")
-    public ResponseEntity<List<OrderDetails>> getOrderDetailsByOrderId(@PathVariable Long orderId) {
+    @GetMapping("/order/{id}")
+    public ResponseEntity<List<OrderDetails>> getOrderDetailsByOrderId(@PathVariable("id") Long orderId) {
         List<OrderDetails> details = orderDetailsService.getOrderDetailsByOrderId(orderId);
         return ResponseEntity.ok(details);
     }

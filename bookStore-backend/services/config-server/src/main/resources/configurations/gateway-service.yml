@@ -46,11 +46,15 @@ spring:
         - id: user-service
           uri: lb:http://USER-SERVICE
           predicates:
-            - Path=/auth/**
+            - Path=/api/v1/auth/**
         - id: composition-service
           uri: lb:http://COMPOSITION-SERVICE
           predicates:
-            - Path=/composition/**
+            - Path=/api/v1/composition/**
+        - id: order-query-service
+          uri: lb:http://ORDER-QUERY-SERVICE
+          predicates:
+            - Path=/api/v1/orders-query/**
 
 server:
   port: 8222

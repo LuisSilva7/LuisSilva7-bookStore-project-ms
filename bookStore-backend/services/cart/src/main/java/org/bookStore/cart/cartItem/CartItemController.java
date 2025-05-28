@@ -20,7 +20,7 @@ public class CartItemController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CartItem> getCartItemById(@PathVariable Long id) {
+    public ResponseEntity<CartItem> getCartItemById(@PathVariable("id") Long id) {
         CartItem item = cartItemService.getCartItemById(id);
         return (item != null)
                 ? ResponseEntity.ok(item)
