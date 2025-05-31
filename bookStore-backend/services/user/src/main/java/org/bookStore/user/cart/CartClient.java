@@ -1,5 +1,6 @@
-package org.bookStore.user.user.cart;
+package org.bookStore.user.cart;
 
+import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,5 +12,5 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface CartClient {
 
     @PostMapping
-    void createCart(@RequestBody CartRequest request);
+    void createCart(@RequestBody @Valid CreateCartRequest request);
 }

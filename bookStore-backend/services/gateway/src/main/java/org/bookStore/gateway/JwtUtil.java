@@ -11,7 +11,7 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private final String SECRET = "umaChaveJWTMuitoSegura123456789012";
+    private final String SECRET = "superSecureJwtKey9876543210";
 
     public String generateToken(String username) {
         return Jwts.builder()

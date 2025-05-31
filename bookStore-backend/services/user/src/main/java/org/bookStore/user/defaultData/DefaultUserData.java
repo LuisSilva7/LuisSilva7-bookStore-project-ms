@@ -2,8 +2,8 @@ package org.bookStore.user.defaultData;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.bookStore.user.user.auth.User;
-import org.bookStore.user.user.auth.UserRepository;
+import org.bookStore.user.user.User;
+import org.bookStore.user.user.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
