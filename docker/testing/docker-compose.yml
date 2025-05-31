@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mysql:
     container_name: ms_mysql_book_store
