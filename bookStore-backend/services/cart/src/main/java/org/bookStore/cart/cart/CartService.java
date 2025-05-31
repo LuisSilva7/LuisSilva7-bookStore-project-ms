@@ -1,11 +1,10 @@
 package org.bookStore.cart.cart;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.bookStore.cart.exception.custom.CartNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -13,31 +12,37 @@ import java.util.List;
 public class CartService {
 
     private final CartRepository cartRepository;
+    private final CartMapper cartMapper;
 
-    public Cart createCart(Long userId) {
-        Cart cart = new Cart();
-        cart.setUserId(userId);
-        cart.setCreatedDate(LocalDate.now());
-        cart.setCartItems(new ArrayList<>());
+    public CartResponse createCart(CreateCartRequest request) {
+        Cart created = cartRepository.save(cartMapper.toCart(request));
 
-        return cartRepository.save(cart);
+        return cartMapper.toCartResponse(created);
     }
 
-    public List<Cart> getAllCart() {
-        return cartRepository.findAll();
+    public List<CartResponse> getAllCart() {
+        List<Cart> carts = cartRepository.findAll();
+
+        return carts.stream()
+                .map(cartMapper::toCartResponse)
+                .toList();
     }
 
-    public Cart getCartIDByUserId(Long userId) {
-        return cartRepository.findByUserId(userId);
+    public CartResponse getCartIDByUserId(Long userId) {
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseThrow(() -> new CartNotFoundException("Cart not found with userId: " + userId));
+
+        return cartMapper.toCartResponse(cart);
     }
 
     @Transactional
-    public void clearCart(Long userId) {
-        Cart cart = cartRepository.findByUserId(userId);
+    public CartResponse clearCart(Long userId) {
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseThrow(() -> new CartNotFoundException("Cart not found with userId: " + userId));
 
-        if (cart != null) {
-            cart.getCartItems().clear();
-            cartRepository.save(cart);
-        }
+        cart.getCartItems().clear();
+        cartRepository.save(cart);
+
+        return cartMapper.toCartResponse(cart);
     }
 }

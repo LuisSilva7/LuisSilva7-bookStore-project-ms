@@ -74,7 +74,7 @@ public class BookService {
                 .toList();
     }
 
-    public BookResponse updateBookQuantity(Long id, UpdateQuantityBookRequest request) {
+    public BookResponse updateBookQuantity(Long id, UpdateBookQuantityRequest request) {
         Book existingBook = bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException("Cannot update quantity. Book not found with Id: " + id));
 

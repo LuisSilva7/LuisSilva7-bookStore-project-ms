@@ -1,7 +1,7 @@
 package org.bookStore.cart.cartItem;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.bookStore.cart.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,31 +13,39 @@ public class CartItemController {
     private final CartItemService cartItemService;
 
     @PostMapping
-    public ResponseEntity<CartItem> createCartItem(@RequestHeader("x-userid") Long userId,
-                                                   @RequestBody CartItem cartItem) {
-        CartItem createdCartItem = cartItemService.createCartItem(userId, cartItem);
-        return new ResponseEntity<>(createdCartItem, HttpStatus.CREATED);
+    public ResponseEntity<ApiResponse<CartItemResponse>> createCartItem(@RequestHeader("x-userid") Long userId,
+                                                                        @RequestBody CreateCartItemRequest request) {
+        CartItemResponse createdCartItem = cartItemService.createCartItem(userId, request);
+
+        return ResponseEntity.ok(new ApiResponse<>(
+                "CartItem created successfully!", createdCartItem));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CartItem> getCartItemById(@PathVariable("id") Long id) {
-        CartItem item = cartItemService.getCartItemById(id);
-        return (item != null)
-                ? ResponseEntity.ok(item)
-                : ResponseEntity.notFound().build();
+    public ResponseEntity<ApiResponse<CartItemResponse>> getCartItemById(@PathVariable("id") Long cartItemId) {
+        CartItemResponse cartItem = cartItemService.getCartItemById(cartItemId);
+
+        return ResponseEntity.ok(new ApiResponse<>(
+                "CartItem with id: " + cartItemId + " obtained successfully!", cartItem));
     }
 
-    @PatchMapping("/quantity")
-    public ResponseEntity<CartItem> updateCartItemQuantity(@RequestHeader("x-userid") Long userId,
-                                                           @RequestBody CartItem cartItem) {
-        CartItem updatedItem = cartItemService.updateCartItemQuantity(userId, cartItem);
-        return new ResponseEntity<>(updatedItem, HttpStatus.OK);
+    @PutMapping("/quantity/{id}")
+    public ResponseEntity<ApiResponse<CartItemResponse>> updateCartItemQuantity(
+            @RequestHeader("x-userid") Long userId,
+            @PathVariable("id") Long cartItemId,
+            @RequestBody UpdateCartItemQuantityRequest request) {
+        CartItemResponse updatedCartItem = cartItemService.updateCartItemQuantity(userId, cartItemId, request);
+
+        return ResponseEntity.ok(new ApiResponse<>(
+                "CartItem updated successfully!", updatedCartItem));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteCartItemById(@RequestHeader("x-userid") Long userId,
-                                                   @PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<?>> deleteCartItemById(@RequestHeader("x-userid") Long userId,
+                                                             @PathVariable Long id) {
         cartItemService.deleteCartItemById(userId, id);
-        return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(new ApiResponse<>(
+                "CartItem with id: " + id + " deleted successfully!", null));
     }
 }

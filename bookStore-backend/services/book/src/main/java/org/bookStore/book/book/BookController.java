@@ -63,9 +63,9 @@ public class BookController {
                 "Books with query: " + query + " obtained successfully!", results));
     }
 
-    @PutMapping("/update-quantity/{id}")
+    @PutMapping("/quantity/{id}")
     public ResponseEntity<ApiResponse<BookResponse>> updateBookQuantity(@PathVariable("id") Long bookId,
-                                                   @RequestBody @Valid UpdateQuantityBookRequest request) {
+                                                   @RequestBody @Valid UpdateBookQuantityRequest request) {
         BookResponse updatedBook = bookService.updateBookQuantity(bookId, request);
 
         return ResponseEntity.ok(new ApiResponse<>(

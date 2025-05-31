@@ -3,7 +3,11 @@ package org.bookStore.cart.cartItem;
 import lombok.RequiredArgsConstructor;
 import org.bookStore.cart.cart.Cart;
 import org.bookStore.cart.cart.CartRepository;
+import org.bookStore.cart.exception.custom.CartItemDoesNotBelongToUserCartException;
+import org.bookStore.cart.exception.custom.CartItemNotFoundException;
+import org.bookStore.cart.exception.custom.CartNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -13,63 +17,74 @@ public class CartItemService {
 
     private final CartItemRepository cartItemRepository;
     private final CartRepository cartRepository;
+    private final CartItemMapper cartItemMapper;
 
-    public CartItem createCartItem(Long userId, CartItem cartItem) {
-        Cart cart = cartRepository.findByUserId(userId);
+    @Transactional
+    public CartItemResponse createCartItem(Long userId, CreateCartItemRequest request) {
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseThrow(() -> new CartNotFoundException("Cart not found with userId: " + userId));
 
         Optional<CartItem> existingItemOpt = cartItemRepository
-                .findByCart_IdAndBookId(cart.getId(), cartItem.getBookId());
+                .findByCart_IdAndBookId(cart.getId(), request.bookId());
 
         CartItem itemToSave;
 
         if (existingItemOpt.isPresent()) {
             CartItem existingItem = existingItemOpt.get();
 
-            int newQuantity = existingItem.getQuantity() + cartItem.getQuantity();
+            int newQuantity = existingItem.getQuantity() + request.quantity();
             existingItem.setQuantity(newQuantity);
 
             if (existingItem.getUnitPrice() != null) {
                 existingItem.setSubTotal(existingItem.getUnitPrice() * newQuantity);
+            } else {
+                existingItem.setSubTotal(0.0);
             }
 
             itemToSave = existingItem;
         } else {
-            cartItem.setCart(cart);
-
-            if (cartItem.getUnitPrice() != null && cartItem.getQuantity() > 0) {
-                cartItem.setSubTotal(cartItem.getUnitPrice() * cartItem.getQuantity());
-            }
-
-            itemToSave = cartItem;
+            itemToSave = cartItemMapper.toCartItem(request, cart);
         }
 
-        return cartItemRepository.save(itemToSave);
+        CartItem savedItem = cartItemRepository.save(itemToSave);
+
+        return cartItemMapper.toCartItemResponse(savedItem);
     }
 
+    public CartItemResponse getCartItemById(Long id) {
+        CartItem cartItem = cartItemRepository.findById(id)
+                .orElseThrow(() -> new CartItemNotFoundException("CartItem not found with id: " + id));
 
-
-    public CartItem getCartItemById(Long id) {
-        CartItem item = cartItemRepository.findById(id).orElse(null);
-        item.setSubTotal(item.getSubTotal());
-        return item;
+        return cartItemMapper.toCartItemResponse(cartItem);
     }
 
-    public CartItem updateCartItemQuantity(Long userId, CartItem cartItem) {
-        Cart cart = cartRepository.findByUserId(userId);
+    public CartItemResponse updateCartItemQuantity(Long userId,
+                                                   Long cartItemId,
+                                                   UpdateCartItemQuantityRequest request) {
+        CartItem existingCartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new CartItemNotFoundException("CartItem not found with id: " + cartItemId));
 
-        for(CartItem item : cart.getCartItems()) {
-            if(item.getId().equals(cartItem.getId())) {
-                item.setQuantity(cartItem.getQuantity());
-                item.setSubTotal(item.getUnitPrice() * item.getQuantity());
-                return cartItemRepository.save(item);
-            }
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseThrow(() -> new CartNotFoundException("Cart not found with userId: " + userId));
+
+        boolean belongsToCart = cart.getCartItems().stream()
+                .anyMatch(item -> item.getId().equals(cartItemId));
+
+        if (!belongsToCart) {
+            throw new CartItemDoesNotBelongToUserCartException("CartItem does not belong to the user's cart.");
         }
 
-        return null;
+        existingCartItem.setQuantity(request.quantity());
+        existingCartItem.setSubTotal(existingCartItem.getUnitPrice() * request.quantity());
+
+        CartItem updatedItem = cartItemRepository.save(existingCartItem);
+
+        return cartItemMapper.toCartItemResponse(updatedItem);
     }
 
     public void deleteCartItemById(Long userId, Long id) {
-        Cart cart = cartRepository.findByUserId(userId);
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseThrow(() -> new CartNotFoundException("Cart not found with userId: " + userId));
 
         for(CartItem item : cart.getCartItems()) {
             if(item.getId().equals(id)) {
