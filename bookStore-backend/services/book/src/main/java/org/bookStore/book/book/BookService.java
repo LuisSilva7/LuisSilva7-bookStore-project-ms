@@ -53,23 +53,6 @@ public class BookService {
                 .toList();
     }
 
-    public BookResponse updateBookQuantity(Long id, UpdateQuantityBookRequest request) {
-        Book existingBook = bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException("Cannot update quantity. Book not found with Id: " + id));
-
-        existingBook.setQuantity(request.quantity());
-        Book saved = bookRepository.save(existingBook);
-        return bookMapper.toBookResponse(saved);
-    }
-
-    public List<BookResponse> searchBooks(String query) {
-        List<Book> results = bookRepository.searchBooks(query);
-
-        return results.stream()
-                .map(bookMapper::toBookResponse)
-                .toList();
-    }
-
     public List<BookResponse> getBooksByAuthorId(Long authorId) {
         boolean authorExists = authorRepository.existsById(authorId);
         if (!authorExists) {
@@ -81,5 +64,22 @@ public class BookService {
         return books.stream()
                 .map(bookMapper::toBookResponse)
                 .toList();
+    }
+
+    public List<BookResponse> searchBooks(String query) {
+        List<Book> results = bookRepository.searchBooks(query);
+
+        return results.stream()
+                .map(bookMapper::toBookResponse)
+                .toList();
+    }
+
+    public BookResponse updateBookQuantity(Long id, UpdateQuantityBookRequest request) {
+        Book existingBook = bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException("Cannot update quantity. Book not found with Id: " + id));
+
+        existingBook.setQuantity(request.quantity());
+        Book saved = bookRepository.save(existingBook);
+        return bookMapper.toBookResponse(saved);
     }
 }

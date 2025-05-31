@@ -16,7 +16,8 @@ public class AuthorService {
     public AuthorResponse createAuthor(CreateAuthorRequest request) {
         boolean exists = authorRepository.existsByNameIgnoreCase(request.name());
         if (exists) {
-            throw new AuthorAlreadyExistsException("An author with the name '" + request.name() + "' already exists.");
+            throw new AuthorAlreadyExistsException(
+                    "An author with the name '" + request.name() + "' already exists.");
         }
 
         Author saved = authorRepository.save(authorMapper.toAuthor(request));

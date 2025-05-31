@@ -47,13 +47,12 @@ public class BookController {
                 "Books with category id: " + categoryId + " obtained successfully!", books));
     }
 
-    @PutMapping("/update-quantity/{id}")
-    public ResponseEntity<ApiResponse<BookResponse>> updateBookQuantity(@PathVariable("id") Long bookId,
-                                                   @RequestBody @Valid UpdateQuantityBookRequest request) {
-        BookResponse updatedBook = bookService.updateBookQuantity(bookId, request);
+    @GetMapping("/author/{id}")
+    public ResponseEntity<ApiResponse<List<BookResponse>>> getBooksByAuthor(@PathVariable("id") Long authorId) {
+        List<BookResponse> books = bookService.getBooksByAuthorId(authorId);
 
         return ResponseEntity.ok(new ApiResponse<>(
-                "Book with id: " + bookId + " updated successfully!", updatedBook));
+                "Books with author id: " + authorId + " obtained successfully!", books));
     }
 
     @GetMapping("/search")
@@ -64,11 +63,12 @@ public class BookController {
                 "Books with query: " + query + " obtained successfully!", results));
     }
 
-    @GetMapping("/author/{id}")
-    public ResponseEntity<ApiResponse<List<BookResponse>>> getBooksByAuthor(@PathVariable("id") Long authorId) {
-        List<BookResponse> books = bookService.getBooksByAuthorId(authorId);
+    @PutMapping("/update-quantity/{id}")
+    public ResponseEntity<ApiResponse<BookResponse>> updateBookQuantity(@PathVariable("id") Long bookId,
+                                                   @RequestBody @Valid UpdateQuantityBookRequest request) {
+        BookResponse updatedBook = bookService.updateBookQuantity(bookId, request);
 
         return ResponseEntity.ok(new ApiResponse<>(
-                "Books with author id: " + authorId + " obtained successfully!", books));
+                "Book with id: " + bookId + " updated successfully!", updatedBook));
     }
 }
