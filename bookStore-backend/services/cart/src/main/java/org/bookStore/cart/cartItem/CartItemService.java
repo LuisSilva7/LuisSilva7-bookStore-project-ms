@@ -82,14 +82,18 @@ public class CartItemService {
         return cartItemMapper.toCartItemResponse(updatedItem);
     }
 
+    @Transactional
     public void deleteCartItemById(Long userId, Long id) {
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new CartNotFoundException("Cart not found with userId: " + userId));
 
-        for(CartItem item : cart.getCartItems()) {
-            if(item.getId().equals(id)) {
-                cartItemRepository.deleteById(id);
-            }
-        }
+        CartItem toRemove = cart.getCartItems().stream()
+                .filter(item -> item.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new CartItemNotFoundException("Cart item not found with id: " + id));
+
+        cart.getCartItems().remove(toRemove);
+        cartRepository.save(cart);
     }
+
 }

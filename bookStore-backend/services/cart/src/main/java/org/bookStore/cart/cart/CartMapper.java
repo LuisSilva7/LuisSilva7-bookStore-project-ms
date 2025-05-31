@@ -17,12 +17,11 @@ public class CartMapper {
     public CartResponse toCartResponse(Cart cart) {
         if (cart == null) return null;
 
-        List<CartItemResponse> cartItemsResponse = null;
-        if (cart.getCartItems() != null) {
-            cartItemsResponse = cart.getCartItems().stream()
-                    .map(cartItemMapper::toCartItemResponse)
-                    .toList();
-        }
+        List<CartItemResponse> cartItemsResponse = cart.getCartItems() != null
+                ? cart.getCartItems().stream()
+                .map(cartItemMapper::toCartItemResponse)
+                .toList()
+                : List.of();
 
         return new CartResponse(
                 cart.getId(),

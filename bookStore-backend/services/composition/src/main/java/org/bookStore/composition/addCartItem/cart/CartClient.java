@@ -1,5 +1,6 @@
 package org.bookStore.composition.addCartItem.cart;
 
+import org.bookStore.composition.response.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface CartClient {
 
     @GetMapping("/user/{id}")
-    CartResponse getCartByUserId(@PathVariable("id") Long userId);
+    ApiResponse<CartResponse> getCartByUserId(@PathVariable("id") Long userId);
 }
 
