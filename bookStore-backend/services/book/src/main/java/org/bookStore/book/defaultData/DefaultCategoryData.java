@@ -2,9 +2,9 @@ package org.bookStore.book.defaultData;
 
 import lombok.RequiredArgsConstructor;
 import org.bookStore.book.category.Category;
-import org.bookStore.book.category.SubCategory;
+import org.bookStore.book.subCategory.SubCategory;
 import org.bookStore.book.category.CategoryRepository;
-import org.bookStore.book.category.SubCategoryRepository;
+import org.bookStore.book.subCategory.SubCategoryRepository;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;

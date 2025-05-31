@@ -1,8 +1,9 @@
-package org.bookStore.book.category;
+package org.bookStore.book.subCategory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.bookStore.book.category.Category;
 
 @AllArgsConstructor
 @NoArgsConstructor

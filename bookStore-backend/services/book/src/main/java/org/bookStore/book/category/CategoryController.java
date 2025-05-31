@@ -1,13 +1,12 @@
 package org.bookStore.book.category;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.bookStore.book.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("/api/v1/categories")
@@ -17,14 +16,18 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
-        Category savedCategory = categoryService.createCategory(category);
-        return new ResponseEntity<>(savedCategory, CREATED);
+    public ResponseEntity<ApiResponse<CategoryResponse>> createCategory(@RequestBody @Valid CreateCategoryRequest request) {
+        CategoryResponse createdCategory = categoryService.createCategory(request);
+
+        return ResponseEntity.ok(new ApiResponse<>(
+                "Category created successfully!", createdCategory));
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = categoryService.getAllCategories();
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+    public ResponseEntity<ApiResponse<List<CategoryResponse>>> getAllCategories() {
+        List<CategoryResponse> categories = categoryService.getAllCategories();
+
+        return ResponseEntity.ok(new ApiResponse<>(
+                "Categories obtained successfully!", categories));
     }
 }

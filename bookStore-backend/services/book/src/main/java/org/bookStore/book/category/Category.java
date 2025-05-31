@@ -3,6 +3,7 @@ package org.bookStore.book.category;
 import jakarta.persistence.*;
 import lombok.*;
 import org.bookStore.book.book.Book;
+import org.bookStore.book.subCategory.SubCategory;
 
 import java.util.List;
 

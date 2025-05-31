@@ -23,6 +23,14 @@ spring:
           uri: lb:http://BOOK-SERVICE
           predicates:
             - Path=/api/v1/categories/**
+        - id: sub-category-service
+          uri: lb:http://BOOK-SERVICE
+          predicates:
+            - Path=/api/v1/sub-categories/**
+        - id: author-service
+          uri: lb:http://BOOK-SERVICE
+          predicates:
+            - Path=/api/v1/authors/**
         - id: cart-service
           uri: lb:http://CART-SERVICE
           predicates:
