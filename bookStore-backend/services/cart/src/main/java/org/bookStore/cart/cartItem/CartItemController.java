@@ -1,5 +1,6 @@
 package org.bookStore.cart.cartItem;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.bookStore.cart.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +14,9 @@ public class CartItemController {
     private final CartItemService cartItemService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<CartItemResponse>> createCartItem(@RequestHeader("x-userid") Long userId,
-                                                                        @RequestBody CreateCartItemRequest request) {
+    public ResponseEntity<ApiResponse<CartItemResponse>> createCartItem(
+            @RequestHeader("x-userid") Long userId,
+            @RequestBody @Valid CreateCartItemRequest request) {
         CartItemResponse createdCartItem = cartItemService.createCartItem(userId, request);
 
         return ResponseEntity.ok(new ApiResponse<>(
@@ -33,7 +35,7 @@ public class CartItemController {
     public ResponseEntity<ApiResponse<CartItemResponse>> updateCartItemQuantity(
             @RequestHeader("x-userid") Long userId,
             @PathVariable("id") Long cartItemId,
-            @RequestBody UpdateCartItemQuantityRequest request) {
+            @RequestBody @Valid UpdateCartItemQuantityRequest request) {
         CartItemResponse updatedCartItem = cartItemService.updateCartItemQuantity(userId, cartItemId, request);
 
         return ResponseEntity.ok(new ApiResponse<>(

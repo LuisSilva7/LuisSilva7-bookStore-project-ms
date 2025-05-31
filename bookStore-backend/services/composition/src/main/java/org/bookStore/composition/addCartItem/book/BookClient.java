@@ -1,6 +1,8 @@
 package org.bookStore.composition.addCartItem.book;
 
+import jakarta.validation.Valid;
 import org.bookStore.composition.authToken.FeignClientConfig;
+import org.bookStore.composition.response.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,8 +13,9 @@ import org.springframework.web.bind.annotation.*;
 )
 public interface BookClient {
     @GetMapping("/{id}")
-    BookResponse getBookById(@PathVariable("id") Long id);
+    ApiResponse<BookResponse> getBookById(@PathVariable("id") Long bookId);
 
-    @PutMapping("/update-quantity/{id}")
-    BookResponse updateBookQuantity(@PathVariable("id") Long id, @RequestBody BookUpdateRequest book);
+    @PutMapping("/quantity/{id}")
+    void updateBookQuantity(@PathVariable("id") Long bookId,
+                            @RequestBody @Valid UpdateBookQuantityRequest book);
 }

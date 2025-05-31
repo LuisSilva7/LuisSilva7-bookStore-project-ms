@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 )
 public interface CartClient {
 
-    @GetMapping("/user/{userId}")
-    CartResponse getCartByUserId(@PathVariable("userId") Long userId);
+    @GetMapping("/user/{id}")
+    CartResponse getCartByUserId(@PathVariable("id") Long userId);
 }
 

@@ -1,6 +1,6 @@
 package org.bookStore.composition.addCartItem.book;
 
-public record BookUpdateRequest(
+public record UpdateBookQuantityRequest(
         int quantity
 ) {
 }
