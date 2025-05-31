@@ -11,7 +11,7 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private final String SECRET = "superSecureJwtKey9876543210";
+    private final String SECRET = "A9fB7eH3jK6mP2rT5xW8zQ1vLcNsYgRu";
 
     public String generateToken(Long userId) {
         return Jwts.builder()
