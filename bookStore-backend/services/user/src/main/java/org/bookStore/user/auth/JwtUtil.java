@@ -2,46 +2,41 @@ package org.bookStore.user.auth;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-    private final String SECRET = "A9fB7eH3jK6mP2rT5xW8zQ1vLcNsYgRu";
+    private final PrivateKey privateKey;
+
+    public JwtUtil() throws Exception {
+        this.privateKey = loadPrivateKey("src/main/resources/keys/private.key");
+    }
 
     public String generateToken(Long userId) {
         return Jwts.builder()
-                .setSubject(userId.toString())
+                .setSubject(String.valueOf(userId))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 3600000))
-                .signWith(Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
+                .signWith(privateKey, SignatureAlgorithm.RS256)
                 .compact();
     }
 
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
+    private PrivateKey loadPrivateKey(String path) throws Exception {
+        String key = Files.readString(Paths.get(path))
+                .replaceAll("-----\\w+ PRIVATE KEY-----", "")
+                .replaceAll("\\s", "");
 
-    public String extractUsername(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        byte[] decoded = Base64.getDecoder().decode(key);
+        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decoded);
+        return KeyFactory.getInstance("RSA").generatePrivate(keySpec);
     }
 }
-
-

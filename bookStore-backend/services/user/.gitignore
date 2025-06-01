@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### Private Key ###
+/src/main/resources/keys/private.key
+
 ### STS ###
 .apt_generated
 .classpath

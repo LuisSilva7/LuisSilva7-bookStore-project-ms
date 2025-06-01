@@ -1,31 +1,28 @@
 package org.bookStore.gateway;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 
 @Component
 public class JwtUtil {
 
-    private final String SECRET = "A9fB7eH3jK6mP2rT5xW8zQ1vLcNsYgRu";
+    private final PublicKey publicKey;
 
-    public String generateToken(String username) {
-        return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
-                .signWith(Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
-                .compact();
+    public JwtUtil() throws Exception {
+        this.publicKey = loadPublicKey("src/main/resources/keys/public.key");
     }
 
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
-                    .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
+                    .setSigningKey(publicKey)
                     .build()
                     .parseClaimsJws(token);
             return true;
@@ -36,12 +33,22 @@ public class JwtUtil {
 
     public Long extractUserId(String token) {
         String subject = Jwts.parserBuilder()
-                .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
+                .setSigningKey(publicKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
 
         return Long.parseLong(subject);
+    }
+
+    private PublicKey loadPublicKey(String path) throws Exception {
+        String key = Files.readString(Paths.get(path))
+                .replaceAll("-----\\w+ PUBLIC KEY-----", "")
+                .replaceAll("\\s", "");
+
+        byte[] decoded = Base64.getDecoder().decode(key);
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decoded);
+        return KeyFactory.getInstance("RSA").generatePublic(keySpec);
     }
 }
