@@ -9,6 +9,7 @@ import org.bookStore.cart.exception.custom.CartNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -21,8 +22,14 @@ public class CartItemService {
 
     @Transactional
     public CartItemResponse createCartItem(Long userId, CreateCartItemRequest request) {
+
         Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new CartNotFoundException("Cart not found with userId: " + userId));
+                .orElseGet(() -> {
+                    Cart newCart = new Cart();
+                    newCart.setUserId(userId);
+                    newCart.setCreatedDate(LocalDate.now());
+                    return cartRepository.save(newCart);
+                });
 
         Optional<CartItem> existingItemOpt = cartItemRepository
                 .findByCart_IdAndBookId(cart.getId(), request.bookId());
