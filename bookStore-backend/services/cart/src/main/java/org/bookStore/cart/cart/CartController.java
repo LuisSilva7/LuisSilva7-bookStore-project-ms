@@ -3,6 +3,7 @@ package org.bookStore.cart.cart;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.bookStore.cart.response.ApiResponse;
+import org.bookStore.cart.response.PageResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,12 +25,16 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<CartResponse>>> getAllCarts() {
-        List<CartResponse> carts = cartService.getAllCart();
+    public ResponseEntity<ApiResponse<PageResponse<CartResponse>>> getAllCarts(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size
+    ) {
+        PageResponse<CartResponse> carts = cartService.getAllCart(page, size);
 
         return ResponseEntity.ok(new ApiResponse<>(
                 "Carts obtained successfully!", carts));
     }
+
 
     @GetMapping("/user/{id}")
     public ResponseEntity<ApiResponse<CartResponse>> getCartByUserId(@PathVariable("id") Long userId) {

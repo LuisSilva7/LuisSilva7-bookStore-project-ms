@@ -2,6 +2,11 @@ package org.bookStore.book.category;
 
 import lombok.RequiredArgsConstructor;
 import org.bookStore.book.exception.custom.CategoryAlreadyExistsException;
+import org.bookStore.book.response.PageResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,11 +29,23 @@ public class CategoryService {
         return categoryMapper.toCategoryResponse(saved);
     }
 
-    public List<CategoryResponse> getAllCategories() {
-        List<Category> categories = categoryRepository.findAll();
+    public PageResponse<CategoryResponse> getAllCategories(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        Page<Category> categories = categoryRepository.findAll(pageable);
 
-        return categories.stream()
+        List<CategoryResponse> response = categories.stream()
                 .map(categoryMapper::toCategoryResponse)
                 .toList();
+
+        return new PageResponse<>(
+                response,
+                categories.getNumber(),
+                categories.getSize(),
+                categories.getTotalElements(),
+                categories.getTotalPages(),
+                categories.isFirst(),
+                categories.isLast()
+        );
     }
+
 }

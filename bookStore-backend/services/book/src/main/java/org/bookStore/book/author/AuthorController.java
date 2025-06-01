@@ -3,6 +3,7 @@ package org.bookStore.book.author;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.bookStore.book.response.ApiResponse;
+import org.bookStore.book.response.PageResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +25,11 @@ public class AuthorController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<AuthorResponse>>> getAllAuthors() {
-        List<AuthorResponse> authors = authorService.getAllAuthors();
+    public ResponseEntity<ApiResponse<PageResponse<AuthorResponse>>> getAllAuthors(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size
+    ) {
+        PageResponse<AuthorResponse> authors = authorService.getAllAuthors(page, size);
 
         return ResponseEntity.ok(new ApiResponse<>(
                 "Authors obtained successfully!", authors));

@@ -3,6 +3,7 @@ package org.bookStore.book.category;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.bookStore.book.response.ApiResponse;
+import org.bookStore.book.response.PageResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +25,11 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<CategoryResponse>>> getAllCategories() {
-        List<CategoryResponse> categories = categoryService.getAllCategories();
+    public ResponseEntity<ApiResponse<PageResponse<CategoryResponse>>> getAllCategories(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size
+    ) {
+        PageResponse<CategoryResponse> categories = categoryService.getAllCategories(page, size);
 
         return ResponseEntity.ok(new ApiResponse<>(
                 "Categories obtained successfully!", categories));

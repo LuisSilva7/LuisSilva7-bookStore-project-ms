@@ -3,6 +3,7 @@ package org.bookStore.order.order;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.bookStore.order.response.ApiResponse;
+import org.bookStore.order.response.PageResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,14 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders() {
-        List<Order> orders = orderService.getAllOrders();
-        return ResponseEntity.ok(orders);
+    public ResponseEntity<ApiResponse<PageResponse<Order>>> getAllOrders(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size
+    ) {
+        PageResponse<Order> orders = orderService.getAllOrders(page, size);
+
+        return ResponseEntity.ok(new ApiResponse<>(
+                "Orders obtained successfully!", orders));
     }
+
 }

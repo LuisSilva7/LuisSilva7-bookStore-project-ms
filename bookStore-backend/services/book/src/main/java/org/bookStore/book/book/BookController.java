@@ -3,6 +3,7 @@ package org.bookStore.book.book;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.bookStore.book.response.ApiResponse;
+import org.bookStore.book.response.PageResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,11 +25,14 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<BookResponse>>> getAllBooks() {
-        List<BookResponse> books = bookService.getAllBooks();
+    public ResponseEntity<ApiResponse<PageResponse<BookResponse>>> getAllBooks(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size
+    ) {
+        PageResponse<BookResponse> response = bookService.getAllBooks(page, size);
 
         return ResponseEntity.ok(new ApiResponse<>(
-                "Books obtained successfully!", books));
+                "Books obtained successfully!", response));
     }
 
     @GetMapping("/{id}")

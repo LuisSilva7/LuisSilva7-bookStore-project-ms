@@ -2,6 +2,11 @@ package org.bookStore.order.order;
 
 import lombok.RequiredArgsConstructor;
 import org.bookStore.order.order.kafka.OrderCreatedEvent;
+import org.bookStore.order.response.PageResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +32,19 @@ public class OrderService {
         kafkaProducerService.sendOrderCreatedEvent(event);
     }
 
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+    public PageResponse<Order> getAllOrders(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        Page<Order> orders = orderRepository.findAll(pageable);
+
+        return new PageResponse<>(
+                orders.getContent(),
+                orders.getNumber(),
+                orders.getSize(),
+                orders.getTotalElements(),
+                orders.getTotalPages(),
+                orders.isFirst(),
+                orders.isLast()
+        );
     }
+
 }

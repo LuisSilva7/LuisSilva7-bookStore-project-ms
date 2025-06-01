@@ -1,6 +1,8 @@
 package org.bookStore.shipping.shipping;
 
 import lombok.RequiredArgsConstructor;
+import org.bookStore.shipping.response.ApiResponse;
+import org.bookStore.shipping.response.PageResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +23,13 @@ public class ShippingOrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ShippingOrder>> getAllShippingOrders() {
-        List<ShippingOrder> shippingOrders = shippingOrderService.getAllShippingOrders();
-        return ResponseEntity.ok(shippingOrders);
+    public ResponseEntity<ApiResponse<PageResponse<ShippingOrder>>> getAllShippingOrders(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size
+    ) {
+        PageResponse<ShippingOrder> shippingOrders = shippingOrderService.getAllShippingOrders(page, size);
+
+        return ResponseEntity.ok(new ApiResponse<>(
+                "Shipping orders obtained successfully!", shippingOrders));
     }
 }

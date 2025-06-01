@@ -6,6 +6,11 @@ import org.bookStore.book.category.CategoryRepository;
 import org.bookStore.book.exception.custom.AuthorNotFoundException;
 import org.bookStore.book.exception.custom.BookNotFoundException;
 import org.bookStore.book.exception.custom.CategoryNotFoundException;
+import org.bookStore.book.response.PageResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,12 +30,23 @@ public class BookService {
         return bookMapper.toBookResponse(created);
     }
 
-    public List<BookResponse> getAllBooks() {
-        List<Book> books = bookRepository.findAll();
+    public PageResponse<BookResponse> getAllBooks(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("title").ascending());
+        Page<Book> books = bookRepository.findAll(pageable);
 
-        return books.stream()
+        List<BookResponse> response = books.stream()
                 .map(bookMapper::toBookResponse)
                 .toList();
+
+        return new PageResponse<>(
+                response,
+                books.getNumber(),
+                books.getSize(),
+                books.getTotalElements(),
+                books.getTotalPages(),
+                books.isFirst(),
+                books.isLast()
+        );
     }
 
     public BookResponse getBookById(Long id) {

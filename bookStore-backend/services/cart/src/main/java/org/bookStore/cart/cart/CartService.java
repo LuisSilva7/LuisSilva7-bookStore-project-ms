@@ -1,5 +1,10 @@
 package org.bookStore.cart.cart;
 
+import org.bookStore.cart.response.PageResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.bookStore.cart.exception.custom.CartNotFoundException;
@@ -20,13 +25,25 @@ public class CartService {
         return cartMapper.toCartResponse(created);
     }
 
-    public List<CartResponse> getAllCart() {
-        List<Cart> carts = cartRepository.findAll();
+    public PageResponse<CartResponse> getAllCart(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        Page<Cart> carts = cartRepository.findAll(pageable);
 
-        return carts.stream()
+        List<CartResponse> response = carts.stream()
                 .map(cartMapper::toCartResponse)
                 .toList();
+
+        return new PageResponse<>(
+                response,
+                carts.getNumber(),
+                carts.getSize(),
+                carts.getTotalElements(),
+                carts.getTotalPages(),
+                carts.isFirst(),
+                carts.isLast()
+        );
     }
+
 
     public CartResponse getCartIDByUserId(Long userId) {
         Cart cart = cartRepository.findByUserId(userId)
