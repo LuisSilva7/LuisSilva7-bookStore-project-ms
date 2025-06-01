@@ -27,24 +27,73 @@ public class DefaultBookData {
 
         if (bookRepository.count() == 0) {
 
-            Author luis = authorRepository.findByName("Luís Silva").orElseThrow();
-            Author mariana = authorRepository.findByName("Mariana Carneiro").orElseThrow();
-            Author joseN = authorRepository.findByName("José Novais").orElseThrow();
-            Author joseQ = authorRepository.findByName("José Queirós").orElseThrow();
+            Author luis = authorRepository.findByName("Luís Silva")
+                    .orElseThrow(() -> new RuntimeException("Author 'Luís Silva' not found"));
+            Author mariana = authorRepository.findByName("Mariana Carneiro")
+                    .orElseThrow(() -> new RuntimeException("Author 'Mariana Carneiro' not found"));
+            Author joseN = authorRepository.findByName("José Novais")
+                    .orElseThrow(() -> new RuntimeException("Author 'José Novais' not found"));
+            Author joseQ = authorRepository.findByName("José Queirós")
+                    .orElseThrow(() -> new RuntimeException("Author 'José Queirós' not found"));
 
-            Category tecnologia = categoryRepository.findByName("Tecnologia").orElseThrow();
-            Category literatura = categoryRepository.findByName("Literatura").orElseThrow();
-            Category negocios = categoryRepository.findByName("Negócios").orElseThrow();
-            Category ciencias = categoryRepository.findByName("Ciências").orElseThrow();
+            Category tecnologia = categoryRepository.findByName("Tecnologia")
+                    .orElseThrow(() -> new RuntimeException("Category 'Tecnologia' not found"));
+            Category literatura = categoryRepository.findByName("Literatura")
+                    .orElseThrow(() -> new RuntimeException("Category 'Literatura' not found"));
+            Category negocios = categoryRepository.findByName("Negócios")
+                    .orElseThrow(() -> new RuntimeException("Category 'Negócios' not found"));
+            Category ciencias = categoryRepository.findByName("Ciências")
+                    .orElseThrow(() -> new RuntimeException("Category 'Ciências' not found"));
 
-            SubCategory java = subCategoryRepository.findByName("Java").orElseThrow();
-            SubCategory redes = subCategoryRepository.findByName("Redes de Computadores").orElseThrow();
-            SubCategory romance = subCategoryRepository.findByName("Romance").orElseThrow();
-            SubCategory fantasia = subCategoryRepository.findByName("Fantasia").orElseThrow();
-            SubCategory marketing = subCategoryRepository.findByName("Marketing Digital").orElseThrow();
-            SubCategory basesDados = subCategoryRepository.findByName("Bases de Dados").orElseThrow();
-            SubCategory fisica = subCategoryRepository.findByName("Física").orElseThrow();
-            SubCategory financas = subCategoryRepository.findByName("Finanças Pessoais").orElseThrow();
+            SubCategory programacao = subCategoryRepository.findByName("Programação")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Programação' not found"));
+            SubCategory redes = subCategoryRepository.findByName("Redes")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Redes' not found"));
+            SubCategory basesDados = subCategoryRepository.findByName("Base de Dados")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Base de Dados' not found"));
+            SubCategory seguranca = subCategoryRepository.findByName("Segurança Informática")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Segurança Informática' not found"));
+            SubCategory inteligencia = subCategoryRepository.findByName("Inteligência Artificial")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Inteligência Artificial' not found"));
+
+            SubCategory romance = subCategoryRepository.findByName("Romance")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Romance' not found"));
+            SubCategory fantasia = subCategoryRepository.findByName("Fantasia")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Fantasia' not found"));
+            SubCategory historico = subCategoryRepository.findByName("Histórico")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Histórico' not found"));
+            SubCategory terror = subCategoryRepository.findByName("Terror")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Terror' not found"));
+            SubCategory poesia = subCategoryRepository.findByName("Poesia")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Poesia' not found"));
+
+            SubCategory fisica = subCategoryRepository.findByName("Física")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Física' not found"));
+            SubCategory biologia = subCategoryRepository.findByName("Biologia")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Biologia' not found"));
+            SubCategory astronomia = subCategoryRepository.findByName("Astronomia")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Astronomia' not found"));
+            SubCategory matematica = subCategoryRepository.findByName("Matemática")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Matemática' not found"));
+
+            SubCategory gestao = subCategoryRepository.findByName("Gestão")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Gestão' not found"));
+            SubCategory economia = subCategoryRepository.findByName("Economia")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Economia' not found"));
+            SubCategory marketing = subCategoryRepository.findByName("Marketing")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Marketing' not found"));
+            SubCategory financas = subCategoryRepository.findByName("Finanças Pessoais")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Finanças Pessoais' not found"));
+
+            SubCategory produtividade = subCategoryRepository.findByName("Produtividade")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Produtividade' not found"));
+            SubCategory motivacao = subCategoryRepository.findByName("Motivação")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Motivação' not found"));
+            SubCategory mindfulness = subCategoryRepository.findByName("Mindfulness")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Mindfulness' not found"));
+            SubCategory relacionamentos = subCategoryRepository.findByName("Relacionamentos")
+                    .orElseThrow(() -> new RuntimeException("SubCategory 'Relacionamentos' not found"));
+
 
             List<Book> books = List.of(
                     Book.builder()
@@ -55,7 +104,7 @@ public class DefaultBookData {
                             .quantity(100)
                             .author(luis)
                             .category(tecnologia)
-                            .subCategories(Set.of(java))
+                            .subCategories(Set.of(programacao))
                             .build(),
 
                     Book.builder()

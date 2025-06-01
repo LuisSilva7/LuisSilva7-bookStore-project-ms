@@ -3,8 +3,7 @@ package org.bookStore.gateway;
 import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
@@ -16,7 +15,7 @@ public class JwtUtil {
     private final PublicKey publicKey;
 
     public JwtUtil() throws Exception {
-        this.publicKey = loadPublicKey("src/main/resources/keys/public.key");
+        this.publicKey = loadPublicKey();
     }
 
     public boolean validateToken(String token) {
@@ -42,8 +41,15 @@ public class JwtUtil {
         return Long.parseLong(subject);
     }
 
-    private PublicKey loadPublicKey(String path) throws Exception {
-        String key = Files.readString(Paths.get(path))
+    private PublicKey loadPublicKey() throws Exception {
+        String path = "keys/public.key";
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(path);
+
+        if (inputStream == null) {
+            throw new RuntimeException("Public key not found at: " + path);
+        }
+
+        String key = new String(inputStream.readAllBytes())
                 .replaceAll("-----\\w+ PUBLIC KEY-----", "")
                 .replaceAll("\\s", "");
 
