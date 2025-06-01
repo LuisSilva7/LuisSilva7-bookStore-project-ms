@@ -7,9 +7,12 @@ import org.bookStore.book.book.Book;
 import org.bookStore.book.book.BookRepository;
 import org.bookStore.book.category.Category;
 import org.bookStore.book.category.CategoryRepository;
+import org.bookStore.book.subCategory.SubCategory;
+import org.bookStore.book.subCategory.SubCategoryRepository;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
+import java.util.Set;
 
 @Configuration
 @RequiredArgsConstructor
@@ -18,6 +21,7 @@ public class DefaultBookData {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final CategoryRepository categoryRepository;
+    private final SubCategoryRepository subCategoryRepository;
 
     public void bookData() {
 
@@ -33,6 +37,15 @@ public class DefaultBookData {
             Category negocios = categoryRepository.findByName("Negócios").orElseThrow();
             Category ciencias = categoryRepository.findByName("Ciências").orElseThrow();
 
+            SubCategory java = subCategoryRepository.findByName("Java").orElseThrow();
+            SubCategory redes = subCategoryRepository.findByName("Redes de Computadores").orElseThrow();
+            SubCategory romance = subCategoryRepository.findByName("Romance").orElseThrow();
+            SubCategory fantasia = subCategoryRepository.findByName("Fantasia").orElseThrow();
+            SubCategory marketing = subCategoryRepository.findByName("Marketing Digital").orElseThrow();
+            SubCategory basesDados = subCategoryRepository.findByName("Bases de Dados").orElseThrow();
+            SubCategory fisica = subCategoryRepository.findByName("Física").orElseThrow();
+            SubCategory financas = subCategoryRepository.findByName("Finanças Pessoais").orElseThrow();
+
             List<Book> books = List.of(
                     Book.builder()
                             .title("Java Essencial")
@@ -42,6 +55,7 @@ public class DefaultBookData {
                             .quantity(10)
                             .author(luis)
                             .category(tecnologia)
+                            .subCategories(Set.of(java))
                             .build(),
 
                     Book.builder()
@@ -52,6 +66,7 @@ public class DefaultBookData {
                             .quantity(7)
                             .author(mariana)
                             .category(tecnologia)
+                            .subCategories(Set.of(redes))
                             .build(),
 
                     Book.builder()
@@ -62,6 +77,7 @@ public class DefaultBookData {
                             .quantity(15)
                             .author(mariana)
                             .category(literatura)
+                            .subCategories(Set.of(romance))
                             .build(),
 
                     Book.builder()
@@ -72,6 +88,7 @@ public class DefaultBookData {
                             .quantity(12)
                             .author(joseN)
                             .category(literatura)
+                            .subCategories(Set.of(fantasia))
                             .build(),
 
                     Book.builder()
@@ -82,6 +99,7 @@ public class DefaultBookData {
                             .quantity(8)
                             .author(joseQ)
                             .category(negocios)
+                            .subCategories(Set.of(marketing))
                             .build(),
 
                     Book.builder()
@@ -92,6 +110,7 @@ public class DefaultBookData {
                             .quantity(9)
                             .author(luis)
                             .category(tecnologia)
+                            .subCategories(Set.of(basesDados))
                             .build(),
 
                     Book.builder()
@@ -102,6 +121,7 @@ public class DefaultBookData {
                             .quantity(6)
                             .author(joseN)
                             .category(ciencias)
+                            .subCategories(Set.of(fisica))
                             .build(),
 
                     Book.builder()
@@ -112,6 +132,7 @@ public class DefaultBookData {
                             .quantity(13)
                             .author(mariana)
                             .category(negocios)
+                            .subCategories(Set.of(financas))
                             .build()
             );
 

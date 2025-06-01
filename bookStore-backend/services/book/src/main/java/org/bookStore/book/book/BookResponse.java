@@ -2,6 +2,9 @@ package org.bookStore.book.book;
 
 import org.bookStore.book.author.AuthorResponse;
 import org.bookStore.book.category.CategoryResponse;
+import org.bookStore.book.subCategory.SubCategoryResponse;
+
+import java.util.Set;
 
 public record BookResponse(
         Long id,
@@ -11,6 +14,7 @@ public record BookResponse(
         double price,
         int quantity,
         CategoryResponse category,
-        AuthorResponse author
+        AuthorResponse author,
+        Set<SubCategoryResponse> subcategories
 ) {
 }

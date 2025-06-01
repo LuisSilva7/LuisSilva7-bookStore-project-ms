@@ -2,6 +2,8 @@ package org.bookStore.book.book;
 
 import jakarta.validation.constraints.*;
 
+import java.util.Set;
+
 public record CreateBookRequest(
 
         @NotBlank(message = "Title is required.")
@@ -23,6 +25,9 @@ public record CreateBookRequest(
         Long categoryId,
 
         @NotNull(message = "Author ID is required.")
-        Long authorId
+        Long authorId,
+
+        @NotEmpty(message = "At least one subcategory ID must be provided.")
+        Set<Long> subcategoryIds
 
 ) {}

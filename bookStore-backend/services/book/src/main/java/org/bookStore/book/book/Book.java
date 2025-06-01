@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.bookStore.book.author.Author;
 import org.bookStore.book.category.Category;
+import org.bookStore.book.subCategory.SubCategory;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -45,4 +49,12 @@ public class Book {
     @JsonIgnore
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @ManyToMany
+    @JoinTable(
+            name = "book_subcategory",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "subcategory_id")
+    )
+    private Set<SubCategory> subCategories = new HashSet<>();
 }
