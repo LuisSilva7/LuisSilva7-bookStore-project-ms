@@ -43,13 +43,6 @@ public class AddCartItemService {
             throw new AddCartItemException("Error adding book to cart.");
         }
 
-        try {
-            int updatedQuantity = book.quantity() - request.quantity();
-            bookClient.updateBookQuantity(request.bookId(), new UpdateBookQuantityRequest(updatedQuantity));
-        } catch (Exception e) {
-            throw new BookUpdateException("Error updating book quantity.");
-        }
-
         CartResponse cart = cartClient.getCartByUserId(userId).getData();
 
         List<CartItemResponse> enrichedItems = cart.cartItems().stream()
