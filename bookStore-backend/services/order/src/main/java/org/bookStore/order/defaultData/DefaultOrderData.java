@@ -20,17 +20,38 @@ public class DefaultOrderData {
 
             List<Order> orders = List.of(
                     Order.builder()
-                            .orderDate(LocalDateTime.now())
-                            .totalPrice(60.0)
+                            .orderDate(LocalDateTime.now().minusDays(5))
+                            .totalPrice(79.97)
                             .cartId(1L)
                             .shippingOrderId(1L)
                             .build(),
 
                     Order.builder()
-                            .orderDate(LocalDateTime.now())
-                            .totalPrice(30.0)
+                            .orderDate(LocalDateTime.now().minusDays(4))
+                            .totalPrice(64.99)
                             .cartId(2L)
                             .shippingOrderId(2L)
+                            .build(),
+
+                    Order.builder()
+                            .orderDate(LocalDateTime.now().minusDays(3))
+                            .totalPrice(90.70)
+                            .cartId(3L)
+                            .shippingOrderId(3L)
+                            .build(),
+
+                    Order.builder()
+                            .orderDate(LocalDateTime.now().minusDays(2))
+                            .totalPrice(66.49)
+                            .cartId(4L)
+                            .shippingOrderId(4L)
+                            .build(),
+
+                    Order.builder()
+                            .orderDate(LocalDateTime.now().minusDays(1))
+                            .totalPrice(52.89)
+                            .cartId(5L)
+                            .shippingOrderId(5L)
                             .build()
             );
 

@@ -35,11 +35,41 @@ public class DefaultShippingOrderData implements CommandLineRunner {
                     ShippingOrder.builder()
                             .firstName("Pedro")
                             .lastName("Gomes")
-                            .address("Avenida Liberdade 45")
+                            .address("Avenida da Liberdade 45")
                             .city("Porto")
                             .email("pedro@example.com")
                             .postalCode("4000-001")
                             .orderId(2L)
+                            .build(),
+
+                    ShippingOrder.builder()
+                            .firstName("Sofia")
+                            .lastName("Ferreira")
+                            .address("Rua das Flores 78")
+                            .city("Lisboa")
+                            .email("sofia@example.com")
+                            .postalCode("1000-002")
+                            .orderId(3L)
+                            .build(),
+
+                    ShippingOrder.builder()
+                            .firstName("Ricardo")
+                            .lastName("Mendes")
+                            .address("Travessa do Parque 10")
+                            .city("Coimbra")
+                            .email("ricardo@example.com")
+                            .postalCode("3000-003")
+                            .orderId(4L)
+                            .build(),
+
+                    ShippingOrder.builder()
+                            .firstName("Ana")
+                            .lastName("Martins")
+                            .address("Alameda do Sol 9")
+                            .city("Vila Real")
+                            .email("ana@example.com")
+                            .postalCode("5000-004")
+                            .orderId(5L)
                             .build()
             );
 

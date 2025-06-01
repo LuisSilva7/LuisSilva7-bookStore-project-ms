@@ -27,6 +27,21 @@ public class DefaultCartData {
                     Cart.builder()
                             .createdDate(LocalDate.now())
                             .userId(2L)
+                            .build(),
+
+                    Cart.builder()
+                            .createdDate(LocalDate.now())
+                            .userId(3L)
+                            .build(),
+
+                    Cart.builder()
+                            .createdDate(LocalDate.now())
+                            .userId(4L)
+                            .build(),
+
+                    Cart.builder()
+                            .createdDate(LocalDate.now())
+                            .userId(5L)
                             .build()
             );
 

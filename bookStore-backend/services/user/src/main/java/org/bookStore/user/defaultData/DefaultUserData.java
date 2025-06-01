@@ -26,14 +26,35 @@ public class DefaultUserData implements CommandLineRunner {
                             .fullname("Joana Ribeiro")
                             .email("joana@example.com")
                             .username("joana")
-                            .password("12345")
+                            .password("123456")
                             .build(),
 
                     User.builder()
                             .fullname("Pedro Gomes")
                             .email("pedro@example.com")
                             .username("pedrog")
-                            .password("12345")
+                            .password("123456")
+                            .build(),
+
+                    User.builder()
+                            .fullname("Ana Martins")
+                            .email("ana.martins@example.com")
+                            .username("ana_m")
+                            .password("123456")
+                            .build(),
+
+                    User.builder()
+                            .fullname("Carlos Dias")
+                            .email("carlos.d@example.com")
+                            .username("carlosd")
+                            .password("123456")
+                            .build(),
+
+                    User.builder()
+                            .fullname("Rita Fernandes")
+                            .email("rita.f@example.com")
+                            .username("rita_fernandes")
+                            .password("123456")
                             .build()
             );
 
