@@ -16,13 +16,13 @@ public class ShippingOrderController {
 
     private final ShippingOrderService shippingOrderService;
 
-    @PostMapping
+    /*@PostMapping
     public ResponseEntity<ShippingOrder> createShippingOrder(@RequestBody ShippingOrder shippingOrder) {
         ShippingOrder createdShippingOrder = shippingOrderService.createShippingOrder(shippingOrder);
         return new ResponseEntity<>(createdShippingOrder, HttpStatus.CREATED);
-    }
+    }*/
 
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<ApiResponse<PageResponse<ShippingOrder>>> getAllShippingOrders(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size
@@ -31,5 +31,5 @@ public class ShippingOrderController {
 
         return ResponseEntity.ok(new ApiResponse<>(
                 "Shipping orders obtained successfully!", shippingOrders));
-    }
+    }*/
 }

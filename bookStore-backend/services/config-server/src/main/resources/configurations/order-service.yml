@@ -12,6 +12,21 @@ spring:
         show_sql: true
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+axon:
+  serializer:
+    general: jackson
+    events: jackson
+    messages: jackson
+  eventhandling:
+    processors:
+      sagaProcessor:
+        mode: subscribing
 
 server:
   port: 8060

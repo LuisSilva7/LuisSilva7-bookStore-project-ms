@@ -1,20 +1,24 @@
 package org.bookStore.book.book;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bookStore.book.author.AuthorRepository;
 import org.bookStore.book.category.CategoryRepository;
 import org.bookStore.book.exception.custom.AuthorNotFoundException;
 import org.bookStore.book.exception.custom.BookNotFoundException;
 import org.bookStore.book.exception.custom.CategoryNotFoundException;
+import org.bookStore.book.kafka.BookQuantityUpdatedEvent;
 import org.bookStore.book.response.PageResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookService {
@@ -23,6 +27,7 @@ public class BookService {
     private final BookMapper bookMapper;
     private final CategoryRepository categoryRepository;
     private final AuthorRepository authorRepository;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public BookResponse createBook(CreateBookRequest request) {
         Book created = bookRepository.save(bookMapper.toBook(request));
@@ -97,5 +102,19 @@ public class BookService {
         existingBook.setQuantity(request.quantity());
         Book saved = bookRepository.save(existingBook);
         return bookMapper.toBookResponse(saved);
+    }
+
+    public void decrementStockForOrder(String orderId) {
+        // ⚠️ Aqui vais buscar os livros associados à ordem e atualizar o stock de cada um
+        // Por agora, exemplo simples:
+        Book book = bookRepository.findById(1L).orElseThrow(); // substituir por lógica real
+        book.setQuantity(book.getQuantity() - 1);
+        bookRepository.save(book);
+
+        log.info("📘 Stock do livro atualizado. OrderId: {}", orderId);
+
+        BookQuantityUpdatedEvent event = new BookQuantityUpdatedEvent(orderId, "user-id");
+        log.info("📤 [Book] Enviando BookStockUpdatedEvent para Kafka: {}", event);
+        kafkaTemplate.send("book-updated", event);
     }
 }

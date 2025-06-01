@@ -44,11 +44,11 @@ public class CartController {
                 "Cart with userId: " + userId + " obtained successfully!", cart));
     }
 
-    @DeleteMapping("/clear")
+    /*@DeleteMapping("/clear")
     public ResponseEntity<ApiResponse<CartResponse>> clearCart(@RequestHeader("x-userid") Long userId) {
         CartResponse cart = cartService.clearCart(userId);
 
         return ResponseEntity.ok(new ApiResponse<>(
                 "Cart with userId: " + userId + " cleared successfully!", cart));
-    }
+    }*/
 }
