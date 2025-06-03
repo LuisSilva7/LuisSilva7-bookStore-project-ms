@@ -17,14 +17,17 @@ import java.util.List;
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String orderId;
 
     @Column
     private LocalDateTime orderDate;
 
     @Column
     private double totalPrice;
+
+    @Enumerated(EnumType.STRING)
+    @Column
+    private OrderStatus status;
 
     @Column(name = "cart_id")
     private Long cartId;

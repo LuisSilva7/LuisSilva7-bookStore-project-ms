@@ -7,8 +7,10 @@ import org.bookStore.book.category.CategoryRepository;
 import org.bookStore.book.exception.custom.AuthorNotFoundException;
 import org.bookStore.book.exception.custom.BookNotFoundException;
 import org.bookStore.book.exception.custom.CategoryNotFoundException;
-import org.bookStore.book.kafka.BookQuantityUpdatedEvent;
+import org.bookStore.book.exception.custom.OutOfStockException;
 import org.bookStore.book.response.PageResponse;
+import org.bookStore.common.commands.UpdateBookQuantityCommand;
+import org.bookStore.common.dto.CreateOrderDetailsRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -104,17 +106,29 @@ public class BookService {
         return bookMapper.toBookResponse(saved);
     }
 
-    public void decrementStockForOrder(String orderId) {
-        // ⚠️ Aqui vais buscar os livros associados à ordem e atualizar o stock de cada um
-        // Por agora, exemplo simples:
-        Book book = bookRepository.findById(1L).orElseThrow(); // substituir por lógica real
-        book.setQuantity(book.getQuantity() - 1);
+    public void updateBookQuantities(List<CreateOrderDetailsRequest> books) {
+        for (CreateOrderDetailsRequest item : books) {
+            Book book = bookRepository.findById(item.bookId())
+                    .orElseThrow(() -> new BookNotFoundException(
+                            "Cannot update quantity. Book not found with Id: " + item.bookId()));
+
+            int newQuantity = book.getQuantity() - item.quantity();
+            if (newQuantity < 0) throw new OutOfStockException(
+                    "Book with Id: " + item.bookId() + " is out of stock!");
+
+            book.setQuantity(newQuantity);
+            bookRepository.save(book);
+        }
+    }
+
+    public void incrementStock(Long bookId, int quantity) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException("Book not found"));
+
+        book.setQuantity(book.getQuantity() + quantity);
         bookRepository.save(book);
 
-        log.info("📘 Stock do livro atualizado. OrderId: {}", orderId);
-
-        BookQuantityUpdatedEvent event = new BookQuantityUpdatedEvent(orderId, "user-id");
-        log.info("📤 [Book] Enviando BookStockUpdatedEvent para Kafka: {}", event);
-        kafkaTemplate.send("book-updated", event);
+        log.info("Stock incremented for bookId={}, new quantity={}", bookId, book.getQuantity());
     }
+
 }

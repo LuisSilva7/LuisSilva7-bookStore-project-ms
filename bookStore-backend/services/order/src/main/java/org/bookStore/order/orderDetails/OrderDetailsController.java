@@ -14,7 +14,7 @@ public class OrderDetailsController {
     private final OrderDetailsService orderDetailsService;
 
     @GetMapping("/order/{id}")
-    public ResponseEntity<List<OrderDetails>> getOrderDetailsByOrderId(@PathVariable("id") Long orderId) {
+    public ResponseEntity<List<OrderDetails>> getOrderDetailsByOrderId(@PathVariable("id") String orderId) {
         List<OrderDetails> details = orderDetailsService.getOrderDetailsByOrderId(orderId);
         return ResponseEntity.ok(details);
     }

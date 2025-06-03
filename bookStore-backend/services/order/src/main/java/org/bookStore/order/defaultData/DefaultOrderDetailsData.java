@@ -6,6 +6,7 @@ import org.bookStore.order.order.OrderRepository;
 import org.bookStore.order.orderDetails.OrderDetails;
 import org.bookStore.order.orderDetails.OrderDetailsRepository;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -20,11 +21,13 @@ public class DefaultOrderDetailsData {
 
         if (orderDetailsRepository.count() == 0) {
 
-            Order order1 = orderRepository.findById(1L).orElseThrow();
-            Order order2 = orderRepository.findById(2L).orElseThrow();
-            Order order3 = orderRepository.findById(3L).orElseThrow();
-            Order order4 = orderRepository.findById(4L).orElseThrow();
-            Order order5 = orderRepository.findById(5L).orElseThrow();
+            List<Order> orders = orderRepository.findAll(PageRequest.of(0, 5)).getContent();
+
+            Order order1 = orders.get(0);
+            Order order2 = orders.get(1);
+            Order order3 = orders.get(2);
+            Order order4 = orders.get(3);
+            Order order5 = orders.get(4);
 
             List<OrderDetails> details = List.of(
 

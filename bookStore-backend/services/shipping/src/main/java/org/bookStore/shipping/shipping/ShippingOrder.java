@@ -32,7 +32,4 @@ public class ShippingOrder {
 
     @Column(name = "postal_code")
     private String postalCode;
-
-    @Column(name = "order_id")
-    private Long orderId;
 }

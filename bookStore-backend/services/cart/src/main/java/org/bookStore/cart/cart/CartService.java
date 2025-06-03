@@ -1,14 +1,12 @@
 package org.bookStore.cart.cart;
 
 import lombok.extern.slf4j.Slf4j;
-import org.bookStore.cart.kafka.CartClearedEvent;
 import org.bookStore.cart.response.PageResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.bookStore.cart.exception.custom.CartNotFoundException;
 import org.springframework.stereotype.Service;
@@ -68,13 +66,13 @@ public class CartService {
         return cartMapper.toCartResponse(cart);
     }*/
 
-    public void clearCart(String userId, String orderId) {
-        // TODO: Limpar carrinho do utilizador na base de dados (placeholder)
-        log.info("🧹 [Cart] Limpando carrinho do utilizador {}", userId);
+    public void clearCartByUserId(Long userId) {
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseThrow(() -> new CartNotFoundException("Cart not found with userId: " + userId));
 
-        // Emitir evento CartClearedEvent
-        CartClearedEvent event = new CartClearedEvent(orderId, userId);
-        log.info("📤 [Cart] Enviando CartClearedEvent: {}", event);
-        kafkaTemplate.send("cart-cleared", event);
+        cart.getCartItems().clear();
+        cartRepository.save(cart);
+
+        log.info("Cart successfully cleared for userId={}", userId);
     }
 }

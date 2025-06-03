@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+
+import static org.springframework.http.HttpStatus.CREATED;
 
 @Slf4j
 @RestController
@@ -24,15 +27,29 @@ public class OrderController {
     private final CommandGateway commandGateway;
 
     @PostMapping
-    public ResponseEntity<String> checkout(@RequestParam String userId) {
+    public CompletableFuture<ResponseEntity<ApiResponse<?>>> checkout(
+            @RequestHeader("x-userid") Long userId,
+            @RequestBody @Valid CreateOrderRequest request) {
         String orderId = UUID.randomUUID().toString();
 
-        log.info("🛒 [Checkout] Iniciando checkout para userId={} com orderId={}", userId, orderId);
+        log.info("[Checkout] Starting checkout for userId={} with orderId={}", userId, orderId);
 
-        CreateOrderCommand command = new CreateOrderCommand(orderId, userId);
-        commandGateway.send(command);
+        CreateOrderCommand command = new CreateOrderCommand(
+                orderId,
+                userId,
+                request.orderDetails(),
+                request.firstName(),
+                request.lastName(),
+                request.address(),
+                request.city(),
+                request.email(),
+                request.postalCode()
+        );
 
-        return ResponseEntity.ok("Checkout iniciado com sucesso para orderId=" + orderId);
+        return commandGateway.send(command)
+                .thenApply(order -> ResponseEntity
+                        .status(CREATED)
+                        .body(new ApiResponse<>("Order created successfully!", order)));
     }
 
     @GetMapping

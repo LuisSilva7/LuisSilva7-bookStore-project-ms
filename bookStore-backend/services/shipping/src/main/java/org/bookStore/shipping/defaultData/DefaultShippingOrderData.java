@@ -29,7 +29,6 @@ public class DefaultShippingOrderData implements CommandLineRunner {
                             .city("Braga")
                             .email("joana@example.com")
                             .postalCode("4700-000")
-                            .orderId(1L)
                             .build(),
 
                     ShippingOrder.builder()
@@ -39,7 +38,6 @@ public class DefaultShippingOrderData implements CommandLineRunner {
                             .city("Porto")
                             .email("pedro@example.com")
                             .postalCode("4000-001")
-                            .orderId(2L)
                             .build(),
 
                     ShippingOrder.builder()
@@ -49,7 +47,6 @@ public class DefaultShippingOrderData implements CommandLineRunner {
                             .city("Lisboa")
                             .email("sofia@example.com")
                             .postalCode("1000-002")
-                            .orderId(3L)
                             .build(),
 
                     ShippingOrder.builder()
@@ -59,7 +56,6 @@ public class DefaultShippingOrderData implements CommandLineRunner {
                             .city("Coimbra")
                             .email("ricardo@example.com")
                             .postalCode("3000-003")
-                            .orderId(4L)
                             .build(),
 
                     ShippingOrder.builder()
@@ -69,7 +65,6 @@ public class DefaultShippingOrderData implements CommandLineRunner {
                             .city("Vila Real")
                             .email("ana@example.com")
                             .postalCode("5000-004")
-                            .orderId(5L)
                             .build()
             );
 

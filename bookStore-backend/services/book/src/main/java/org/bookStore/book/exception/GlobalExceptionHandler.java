@@ -79,6 +79,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(CONFLICT).body(apiResponse);
     }
 
+    @ExceptionHandler(OutOfStockException.class)
+    public ResponseEntity<ApiResponse<Object>> handleException(OutOfStockException exp) {
+        ApiResponse<Object> apiResponse = new ApiResponse<>(
+                exp.getMessage(), null);
+
+        return ResponseEntity.status(CONFLICT).body(apiResponse);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<String>> handleException(MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult()

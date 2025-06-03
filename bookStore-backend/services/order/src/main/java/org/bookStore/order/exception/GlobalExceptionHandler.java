@@ -1,6 +1,7 @@
 package org.bookStore.order.exception;
 
 
+import org.bookStore.order.exception.custom.OrderNotFoundException;
 import org.bookStore.order.response.ApiResponse;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,14 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleException(OrderNotFoundException exp) {
+        ApiResponse<Object> apiResponse = new ApiResponse<>(
+                exp.getMessage(), null);
+
+        return ResponseEntity.status(NOT_FOUND).body(apiResponse);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<String>> handleException(MethodArgumentNotValidException ex) {

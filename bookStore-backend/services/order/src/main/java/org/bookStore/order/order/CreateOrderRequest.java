@@ -1,27 +1,21 @@
 package org.bookStore.order.order;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import org.bookStore.order.orderDetails.CreateOrderDetailsRequest;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import org.bookStore.common.dto.CreateOrderDetailsRequest;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public record CreateOrderRequest(
 
-        @NotNull(message = "Order date is required.")
-        LocalDateTime orderDate,
+        @NotEmpty(message = "Order should have 1 item at least")
+        List<CreateOrderDetailsRequest> orderDetails,
 
-        @Positive(message = "Total price must be positive.")
-        double totalPrice,
-
-        @NotNull(message = "Cart ID is required.")
-        Long cartId,
-
-        @NotNull(message = "Shipping order ID is required.")
-        Long shippingOrderId,
-
-        @NotNull(message = "Order details are required.")
-        List<@NotNull CreateOrderDetailsRequest> orderDetails
-
+        @NotBlank String firstName,
+        @NotBlank String lastName,
+        @NotBlank String address,
+        @NotBlank String city,
+        @Email String email,
+        @NotBlank String postalCode
 ) {}

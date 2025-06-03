@@ -1,0 +1,8 @@
+org\bookStore\common\commands\CreateShippingOrderCommand.class
+org\bookStore\common\events\CartClearedEvent.class
+org\bookStore\common\commands\UpdateBookQuantityCommand$BookQuantity.class
+org\bookStore\common\commands\ClearCartCommand.class
+org\bookStore\common\dto\CreateOrderDetailsRequest.class
+org\bookStore\common\events\BookQuantityUpdatedEvent.class
+org\bookStore\common\commands\UpdateBookQuantityCommand.class
+org\bookStore\common\events\ShippingOrderCreatedEvent.class
