@@ -5,9 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bookStore.book.book.BookService;
 import org.bookStore.common.commands.RollbackBookQuantityCommand;
 import org.bookStore.common.commands.UpdateBookQuantityCommand;
-import org.bookStore.common.events.BookQuantityRollbackedEvent;
-import org.bookStore.common.events.BookQuantityUpdateFailedEvent;
-import org.bookStore.common.events.BookQuantityUpdatedEvent;
+import org.bookStore.common.events.*;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -35,6 +33,14 @@ public class BookCommandListener {
 
             kafkaTemplate.send("book-quantity-updated", command.orderId(), event);
             log.info("BookQuantityUpdatedEvent sent for orderId={}", command.orderId());
+
+            BookInfoEvent bookInfoEvent = new BookInfoEvent(
+                    command.orderId(),
+                    command.orderDetails()
+            );
+
+            kafkaTemplate.send("order-events-3", command.orderId(), bookInfoEvent);
+            log.info("BookQuantityUpdatedEvent sent to order-events for query update");
 
         } catch (Exception e) {
             log.error("Error updating stock for orderId={}: {}", command.orderId(), e.getMessage());

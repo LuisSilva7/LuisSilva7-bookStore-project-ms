@@ -1,6 +1,6 @@
 package org.bookStore.order.order;
 
-import org.bookStore.common.dto.CreateOrderDetailsRequest;
+import org.bookStore.common.utils.CreateOrderDetailsRequest;
 import org.bookStore.order.command.events.OrderCreatedEvent;
 import org.bookStore.order.orderDetails.OrderDetails;
 import org.bookStore.order.orderDetails.OrderDetailsMapper;
@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static org.bookStore.order.order.OrderStatus.PENDING;
 
 @Service
 public class OrderMapper {
@@ -17,7 +19,7 @@ public class OrderMapper {
                 .orderId(event.orderId())
                 .orderDate(LocalDateTime.now())
                 .totalPrice(calculateTotal(event.orderDetails()))
-                .status(OrderStatus.PENDING)
+                .status(PENDING)
                 .cartId(event.userId())
                 .orderDetails(null)
                 .build();

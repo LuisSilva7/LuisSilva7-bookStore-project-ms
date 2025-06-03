@@ -3,7 +3,7 @@ package org.bookStore.order.order;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import org.bookStore.common.dto.CreateOrderDetailsRequest;
+import org.bookStore.common.utils.CreateOrderDetailsRequest;
 
 import java.util.List;
 

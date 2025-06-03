@@ -7,7 +7,7 @@ import org.axonframework.modelling.saga.SagaLifecycle;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.spring.stereotype.Saga;
 import org.bookStore.common.commands.*;
-import org.bookStore.common.dto.CreateOrderDetailsRequest;
+import org.bookStore.common.utils.CreateOrderDetailsRequest;
 import org.bookStore.common.events.*;
 import org.bookStore.order.command.commands.FinalizeOrderCommand;
 import org.bookStore.order.command.commands.UpdateShippingOrderIdCommand;
@@ -16,7 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static org.bookStore.common.utils.OrderStatus.FINALIZED;
+import static org.bookStore.common.utils.OrderStatus.PENDING;
 
 @Saga
 @Slf4j
@@ -46,6 +50,21 @@ public class OrderSaga {
 
         kafkaTemplate.send("create-shipping-order", event.orderId(), shippingCommand);
         log.info("Command sent to Kafka: CreateShippingOrderCommand");
+
+        double totalPrice = event.orderDetails().stream()
+                .mapToDouble(d -> d.unitPrice() * d.quantity())
+                .sum();
+
+        OrderInfoEvent queryEvent = new OrderInfoEvent(
+                event.orderId(),
+                LocalDateTime.now(),
+                totalPrice,
+                PENDING,
+                event.userId()
+        );
+
+        kafkaTemplate.send("order-events-1", event.orderId(), queryEvent);
+        log.info("Event sent to Kafka: OrderQueryUpdateEvent");
     }
 
     @SagaEventHandler(associationProperty = "orderId")
@@ -129,5 +148,13 @@ public class OrderSaga {
         log.info("[SAGA] Successfully completed for orderId={}", event.orderId());
 
         commandGateway.send(new FinalizeOrderCommand(event.orderId()));
+
+        OrderInfoFinalEvent queryEvent = new OrderInfoFinalEvent(
+                event.orderId(),
+                FINALIZED
+        );
+
+        kafkaTemplate.send("order-events-4", event.orderId(), queryEvent);
+        log.info("Event sent to Kafka: OrderInfoFinalEvent");
     }
 }

@@ -3,6 +3,7 @@ package org.bookStore.shipping.kafka;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bookStore.common.commands.CreateShippingOrderCommand;
+import org.bookStore.common.events.ShippingInfoEvent;
 import org.bookStore.common.events.ShippingOrderCreatedEvent;
 import org.bookStore.common.events.ShippingOrderCreationFailedEvent;
 import org.bookStore.shipping.shipping.ShippingOrder;
@@ -35,6 +36,17 @@ public class ShippingOrderCommandListener {
 
             kafkaTemplate.send("shipping-order-created", command.orderId(), event);
             log.info("ShippingOrderCreatedEvent sent");
+
+            ShippingInfoEvent shippingInfo = new ShippingInfoEvent(
+                    command.orderId(),
+                    command.firstName(),
+                    command.address(),
+                    command.city(),
+                    command.postalCode()
+            );
+
+            kafkaTemplate.send("order-events-2", command.orderId(), shippingInfo);
+            log.info("ShippingInfoUpdatedEvent sent to order-events");
 
         } catch (Exception e) {
             log.error("Error creating ShippingOrder for orderId={}: {}", command.orderId(), e.getMessage());

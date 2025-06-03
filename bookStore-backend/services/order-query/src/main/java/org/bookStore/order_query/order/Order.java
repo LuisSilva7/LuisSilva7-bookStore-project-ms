@@ -1,9 +1,13 @@
 package org.bookStore.order_query.order;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.bookStore.common.utils.OrderStatus;
+import org.bookStore.order_query.book.BookItem;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,11 +22,34 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private String orderId;
+
+    @Column
+    private LocalDateTime orderDate;
+
+    @Column
+    private Double totalPrice;
+
+    @Column
+    private OrderStatus status;
+
+    @Column
     private Long userId;
 
-    private Double totalAmount;
+    @Column
+    private String firstname;
 
-    private LocalDate orderDate;
+    @Column
+    private String address;
 
-    private String status; // Ex: PENDING, CONFIRMED
+    @Column
+    private String city;
+
+    @Column
+    private String postalCode;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BookItem> bookItems;
 }

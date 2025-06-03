@@ -1,7 +1,7 @@
 package org.bookStore.order.command.commands;
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
-import org.bookStore.common.dto.CreateOrderDetailsRequest;
+import org.bookStore.common.utils.CreateOrderDetailsRequest;
 
 import java.util.List;
 

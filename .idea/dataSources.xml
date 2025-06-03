@@ -13,11 +13,11 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="order_query_db@localhost" uuid="7c057a7c-94ee-49f7-8319-752c01b8e310">
+    <data-source source="LOCAL" name="order_query_db@localhost" uuid="6617258e-e465-4461-9b0a-80195c2a7816">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/order_query_db</jdbc-url>
+      <jdbc-url>jdbc:mysql://localhost:3307/order_query_db</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />

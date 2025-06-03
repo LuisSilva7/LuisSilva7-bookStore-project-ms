@@ -1,4 +1,4 @@
-package org.bookStore.common.dto;
+package org.bookStore.common.utils;
 
 public record CreateOrderDetailsRequest(
         int quantity,

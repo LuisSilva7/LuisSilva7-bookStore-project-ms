@@ -1,6 +1,6 @@
 package org.bookStore.common.commands;
 
-import org.bookStore.common.dto.CreateOrderDetailsRequest;
+import org.bookStore.common.utils.CreateOrderDetailsRequest;
 
 import java.util.List;
 

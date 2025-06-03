@@ -11,16 +11,17 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/orders-query")
+@RequestMapping("/api/v1/orders-query")
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final OrderRepository orderRepository;
+    private final OrderService orderService;
 
     @GetMapping
     public List<Order> getOrdersBetweenDates(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        return orderRepository.findByOrderDateBetween(startDate, endDate);
+
+        return orderService.getOrdersBetweenDates(startDate, endDate);
     }
 }

@@ -1,6 +1,6 @@
 package org.bookStore.order.orderDetails;
 
-import org.bookStore.common.dto.CreateOrderDetailsRequest;
+import org.bookStore.common.utils.CreateOrderDetailsRequest;
 import org.bookStore.order.order.Order;
 import org.springframework.stereotype.Service;
 

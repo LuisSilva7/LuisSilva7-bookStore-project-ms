@@ -10,7 +10,23 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init-book.sql:/docker-entrypoint-initdb.d/init-book.sql
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  mysql2:
+    container_name: ms_mysql_order_query
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: username
+      MYSQL_PASSWORD: password
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data_order_query:/var/lib/mysql
+      - ./init-order-query.sql:/docker-entrypoint-initdb.d/init-order-query.sql
     networks:
       - microservices-net
     restart: unless-stopped
@@ -47,3 +63,4 @@ networks:
 
 volumes:
   mysql_data:
+  mysql_data_order_query:
