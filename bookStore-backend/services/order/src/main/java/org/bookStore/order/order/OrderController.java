@@ -27,7 +27,7 @@ public class OrderController {
     private final CommandGateway commandGateway;
 
     @PostMapping
-    public CompletableFuture<ResponseEntity<ApiResponse<?>>> checkout(
+    public CompletableFuture<ResponseEntity<ApiResponse<String>>> checkout(
             @RequestHeader("x-userid") Long userId,
             @RequestBody @Valid CreateOrderRequest request) {
         String orderId = UUID.randomUUID().toString();
