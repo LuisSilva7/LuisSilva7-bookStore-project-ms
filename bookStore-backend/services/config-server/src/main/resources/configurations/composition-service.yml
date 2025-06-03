@@ -13,6 +13,10 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
 
+axon:
+  axonserver:
+    enabled: false
+
 server:
   port: 8010
 
@@ -21,3 +25,5 @@ application:
     book-url: http://localhost:8222/api/v1/books
     cart-url: http://localhost:8222/api/v1/carts
     cart-item-url: http://localhost:8222/api/v1/cart-items
+    order-url: http://localhost:8222/api/v1/orders
+    shipping-order-url: http://localhost:8222/api/v1/shippings

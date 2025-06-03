@@ -1,6 +1,4 @@
-package org.bookStore.order.order;
-
-import org.bookStore.order.orderDetails.OrderDetailsResponse;
+package org.bookStore.composition.getOrderDetails.order;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,4 +10,5 @@ public record OrderResponse(
         Long cartId,
         Long shippingOrderId,
         List<OrderDetailsResponse> orderDetails
-) {}
+) {
+}

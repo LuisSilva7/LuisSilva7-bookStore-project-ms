@@ -1,4 +1,4 @@
-package org.bookStore.composition.addCartItem.book;
+package org.bookStore.composition.common.book;
 
 public record BookResponse (
         Long id,

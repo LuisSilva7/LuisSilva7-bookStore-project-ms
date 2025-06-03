@@ -3,6 +3,7 @@ package org.bookStore.shipping.shipping;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bookStore.common.commands.CreateShippingOrderCommand;
+import org.bookStore.shipping.exception.custom.ShippingOrderNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -12,6 +13,7 @@ public class ShippingOrderService {
 
     private final ShippingOrderMapper shippingOrderMapper;
     private final ShippingOrderRepository repository;
+    private final ShippingOrderRepository shippingOrderRepository;
 
     public ShippingOrder createShippingOrder(CreateShippingOrderCommand command) {
         ShippingOrder shipping = shippingOrderMapper.toShippingOrder(command);
@@ -33,4 +35,10 @@ public class ShippingOrderService {
         );
     }*/
 
+    public ShippingOrderResponse getShippingOrderByOrderId(String id) {
+        ShippingOrder shippingOrder = shippingOrderRepository.findByOrderId(id)
+                .orElseThrow(() -> new ShippingOrderNotFoundException("ShippingOrder not found with Id: " + id));
+
+        return shippingOrderMapper.toShippingOrderResponse(shippingOrder);
+    }
 }

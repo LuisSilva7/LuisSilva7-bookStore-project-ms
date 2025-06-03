@@ -1,9 +1,8 @@
 package org.bookStore.composition.addCartItem;
 
 import lombok.RequiredArgsConstructor;
-import org.bookStore.composition.addCartItem.book.BookClient;
-import org.bookStore.composition.addCartItem.book.BookResponse;
-import org.bookStore.composition.addCartItem.book.UpdateBookQuantityRequest;
+import org.bookStore.composition.common.book.BookClient;
+import org.bookStore.composition.common.book.BookResponse;
 import org.bookStore.composition.addCartItem.cart.CartClient;
 import org.bookStore.composition.addCartItem.cart.CartResponse;
 import org.bookStore.composition.addCartItem.cartItem.AddCartItemRequest;
@@ -11,7 +10,6 @@ import org.bookStore.composition.addCartItem.cartItem.CartItemClient;
 import org.bookStore.composition.addCartItem.cartItem.CartItemResponse;
 import org.bookStore.composition.exception.custom.AddCartItemException;
 import org.bookStore.composition.exception.custom.BookNotFoundException;
-import org.bookStore.composition.exception.custom.BookUpdateException;
 import org.bookStore.composition.exception.custom.InsufficientBookStockException;
 import org.springframework.stereotype.Service;
 

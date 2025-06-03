@@ -4,6 +4,7 @@ import org.bookStore.common.utils.CreateOrderDetailsRequest;
 import org.bookStore.order.events.OrderCreatedEvent;
 import org.bookStore.order.orderDetails.OrderDetails;
 import org.bookStore.order.orderDetails.OrderDetailsMapper;
+import org.bookStore.order.orderDetails.OrderDetailsResponse;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,6 +31,22 @@ public class OrderMapper {
 
         order.setOrderDetails(details);
         return order;
+    }
+
+    public OrderResponse toOrderResponse(Order order) {
+        List<OrderDetailsResponse> details = order.getOrderDetails()
+                .stream()
+                .map(OrderDetailsMapper::toOrderDetailsResponse)
+                .toList();
+
+        return new OrderResponse(
+                order.getOrderId(),
+                order.getOrderDate(),
+                order.getTotalPrice(),
+                order.getCartId(),
+                order.getShippingOrderId(),
+                details
+        );
     }
 
     private static double calculateTotal(List<CreateOrderDetailsRequest> details) {

@@ -16,4 +16,14 @@ public class OrderDetailsMapper {
                 .order(order)
                 .build();
     }
+
+    public static OrderDetailsResponse toOrderDetailsResponse(OrderDetails details) {
+        return new OrderDetailsResponse(
+                details.getId(),
+                details.getQuantity(),
+                details.getUnitPrice(),
+                details.getSubTotal(),
+                details.getBookId()
+        );
+    }
 }

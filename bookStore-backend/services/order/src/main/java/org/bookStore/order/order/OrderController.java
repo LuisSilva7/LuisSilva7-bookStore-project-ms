@@ -60,4 +60,11 @@ public class OrderController {
                 "Orders obtained successfully!", orders));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<OrderResponse>> getOrderById(@PathVariable("id") String orderId) {
+        OrderResponse order = orderService.getOrderById(orderId);
+
+        return ResponseEntity.ok(new ApiResponse<>(
+                "Order with id: " + orderId + " obtained successfully!", order));
+    }
 }

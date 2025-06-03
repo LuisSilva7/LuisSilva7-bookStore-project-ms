@@ -32,4 +32,15 @@ public class ShippingOrderController {
         return ResponseEntity.ok(new ApiResponse<>(
                 "Shipping orders obtained successfully!", shippingOrders));
     }*/
+
+    @PostMapping
+    public ResponseEntity<ApiResponse<ShippingOrderResponse>> getShippingOrderByOrderId(
+            @RequestBody GetShippingOrderRequest request) {
+        ShippingOrderResponse shippingOrderResponse = shippingOrderService.
+                getShippingOrderByOrderId(request.orderId());
+
+        return ResponseEntity.ok(new ApiResponse<>(
+                "ShippingOrder with id: " + request.orderId() + " obtained successfully!",
+                shippingOrderResponse));
+    }
 }

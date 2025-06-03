@@ -14,6 +14,16 @@ public class ShippingOrderMapper {
                 .city(command.city())
                 .email(command.email())
                 .postalCode(command.postalCode())
+                .orderId(command.orderId())
                 .build();
+    }
+
+    public ShippingOrderResponse toShippingOrderResponse(ShippingOrder shippingOrder) {
+        return new ShippingOrderResponse(
+                shippingOrder.getFirstName(),
+                shippingOrder.getAddress(),
+                shippingOrder.getCity(),
+                shippingOrder.getPostalCode()
+        );
     }
 }
