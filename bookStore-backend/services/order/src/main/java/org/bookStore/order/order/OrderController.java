@@ -47,9 +47,9 @@ public class OrderController {
         );
 
         return commandGateway.send(command)
-                .thenApply(order -> ResponseEntity
-                        .status(CREATED)
-                        .body(new ApiResponse<>("Order created successfully!", order)));
+                .thenApply(result -> ResponseEntity
+                        .status(HttpStatus.ACCEPTED)
+                        .body(new ApiResponse<>("Order received and is being processed.", orderId)));
     }
 
     @GetMapping
