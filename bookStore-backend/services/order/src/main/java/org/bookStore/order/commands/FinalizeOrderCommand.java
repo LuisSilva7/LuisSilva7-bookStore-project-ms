@@ -1,4 +1,4 @@
-package org.bookStore.order.command.commands;
+package org.bookStore.order.commands;
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 

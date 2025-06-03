@@ -1,10 +1,12 @@
-package org.bookStore.order.command.events;
+package org.bookStore.order.commands;
 
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
 import org.bookStore.common.utils.CreateOrderDetailsRequest;
 
 import java.util.List;
 
-public record OrderCreatedEvent(
+public record CreateOrderCommand(
+        @TargetAggregateIdentifier
         String orderId,
         Long userId,
         List<CreateOrderDetailsRequest> orderDetails,
@@ -17,3 +19,4 @@ public record OrderCreatedEvent(
         String postalCode
 ) {
 }
+

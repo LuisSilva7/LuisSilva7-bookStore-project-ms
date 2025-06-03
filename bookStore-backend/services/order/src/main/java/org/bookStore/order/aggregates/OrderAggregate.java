@@ -1,12 +1,12 @@
-package org.bookStore.order.command.aggregates;
+package org.bookStore.order.aggregates;
 
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.bookStore.common.commands.CancelOrderCommand;
 import org.bookStore.common.events.OrderCancelledEvent;
-import org.bookStore.order.command.commands.CreateOrderCommand;
-import org.bookStore.order.command.commands.FinalizeOrderCommand;
-import org.bookStore.order.command.commands.UpdateShippingOrderIdCommand;
-import org.bookStore.order.command.events.OrderCreatedEvent;
+import org.bookStore.order.commands.CreateOrderCommand;
+import org.bookStore.order.commands.FinalizeOrderCommand;
+import org.bookStore.order.commands.UpdateShippingOrderIdCommand;
+import org.bookStore.order.events.OrderCreatedEvent;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +14,8 @@ import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
-import org.bookStore.order.command.events.OrderFinalizedEvent;
-import org.bookStore.order.command.events.ShippingOrderIdUpdatedEvent;
+import org.bookStore.order.events.OrderFinalizedEvent;
+import org.bookStore.order.events.ShippingOrderIdUpdatedEvent;
 
 @Slf4j
 @NoArgsConstructor

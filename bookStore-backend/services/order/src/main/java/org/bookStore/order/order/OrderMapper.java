@@ -1,7 +1,7 @@
 package org.bookStore.order.order;
 
 import org.bookStore.common.utils.CreateOrderDetailsRequest;
-import org.bookStore.order.command.events.OrderCreatedEvent;
+import org.bookStore.order.events.OrderCreatedEvent;
 import org.bookStore.order.orderDetails.OrderDetails;
 import org.bookStore.order.orderDetails.OrderDetailsMapper;
 import org.springframework.stereotype.Service;

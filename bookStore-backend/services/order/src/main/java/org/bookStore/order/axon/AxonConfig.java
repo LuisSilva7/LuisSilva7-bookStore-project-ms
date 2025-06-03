@@ -1,4 +1,4 @@
-package org.bookStore.order.command.axon;
+package org.bookStore.order.axon;
 
 import org.axonframework.eventhandling.tokenstore.TokenStore;
 import org.axonframework.eventhandling.tokenstore.inmemory.InMemoryTokenStore;

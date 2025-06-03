@@ -9,9 +9,9 @@ import org.axonframework.spring.stereotype.Saga;
 import org.bookStore.common.commands.*;
 import org.bookStore.common.utils.CreateOrderDetailsRequest;
 import org.bookStore.common.events.*;
-import org.bookStore.order.command.commands.FinalizeOrderCommand;
-import org.bookStore.order.command.commands.UpdateShippingOrderIdCommand;
-import org.bookStore.order.command.events.OrderCreatedEvent;
+import org.bookStore.order.commands.FinalizeOrderCommand;
+import org.bookStore.order.commands.UpdateShippingOrderIdCommand;
+import org.bookStore.order.events.OrderCreatedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -109,6 +109,39 @@ public class OrderSaga {
     }
 
     @SagaEventHandler(associationProperty = "orderId")
+    @EndSaga
+    public void on(CartClearedEvent event) {
+        log.info("[SAGA] Successfully completed for orderId={}", event.orderId());
+
+        commandGateway.send(new FinalizeOrderCommand(event.orderId()));
+
+        OrderInfoFinalEvent queryEvent = new OrderInfoFinalEvent(
+                event.orderId(),
+                FINALIZED
+        );
+
+        kafkaTemplate.send("order-events-4", event.orderId(), queryEvent);
+        log.info("Event sent to Kafka: OrderInfoFinalEvent");
+    }
+
+    @SagaEventHandler(associationProperty = "orderId")
+    public void on(ShippingOrderCreationFailedEvent event) {
+        log.info("[SAGA] Shipping order creation failed → cancelling order");
+
+        commandGateway.send(new CancelOrderCommand(event.orderId()));
+        SagaLifecycle.end();
+    }
+
+    @SagaEventHandler(associationProperty = "orderId")
+    public void on(BookQuantityUpdateFailedEvent event) {
+        log.info("[SAGA] Failed to update stock, starting compensation");
+
+        commandGateway.send(new CancelOrderCommand(event.orderId()));
+
+        SagaLifecycle.end();
+    }
+
+    @SagaEventHandler(associationProperty = "orderId")
     public void on(CartClearFailedEvent event) {
         log.warn("[SAGA] Failed to clear cart for orderId={}", event.orderId());
 
@@ -123,38 +156,5 @@ public class OrderSaga {
         commandGateway.send(cancelCommand);
 
         SagaLifecycle.end();
-    }
-
-    @SagaEventHandler(associationProperty = "orderId")
-    public void on(BookQuantityUpdateFailedEvent event) {
-        log.info("[SAGA] Failed to update stock, starting compensation");
-
-        commandGateway.send(new CancelOrderCommand(event.orderId()));
-
-        SagaLifecycle.end();
-    }
-
-    @SagaEventHandler(associationProperty = "orderId")
-    public void on(ShippingOrderCreationFailedEvent event) {
-        log.info("[SAGA] Shipping order creation failed → cancelling order");
-
-        commandGateway.send(new CancelOrderCommand(event.orderId()));
-        SagaLifecycle.end();
-    }
-
-    @SagaEventHandler(associationProperty = "orderId")
-    @EndSaga
-    public void on(CartClearedEvent event) {
-        log.info("[SAGA] Successfully completed for orderId={}", event.orderId());
-
-        commandGateway.send(new FinalizeOrderCommand(event.orderId()));
-
-        OrderInfoFinalEvent queryEvent = new OrderInfoFinalEvent(
-                event.orderId(),
-                FINALIZED
-        );
-
-        kafkaTemplate.send("order-events-4", event.orderId(), queryEvent);
-        log.info("Event sent to Kafka: OrderInfoFinalEvent");
     }
 }

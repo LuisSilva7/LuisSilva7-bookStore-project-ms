@@ -24,14 +24,14 @@ public class BookEventConsumer {
         eventBus.publish(GenericEventMessage.asEventMessage(event));
     }
 
-    @KafkaListener(topics = "book-quantity-rollbacked", groupId = "saga")
-    public void handle(BookQuantityRollbackedEvent event) {
-        log.info("[Kafka→Axon] Forwarding BookQuantityRollbackedEvent to EventBus");
+    @KafkaListener(topics = "book-quantity-update-failed", groupId = "saga")
+    public void handle(BookQuantityUpdateFailedEvent event) {
         eventBus.publish(GenericEventMessage.asEventMessage(event));
     }
 
-    @KafkaListener(topics = "book-quantity-update-failed")
-    public void handle(BookQuantityUpdateFailedEvent event) {
+    @KafkaListener(topics = "book-quantity-rollbacked", groupId = "saga")
+    public void handle(BookQuantityRollbackedEvent event) {
+        log.info("[Kafka→Axon] Forwarding BookQuantityRollbackedEvent to EventBus");
         eventBus.publish(GenericEventMessage.asEventMessage(event));
     }
 }
