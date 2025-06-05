@@ -1,6 +1,7 @@
 C:\Users\lmlms\Desktop\cadeiras\4ano\2semestre\ASID\bookStore-project-ms\bookStore-backend\common\src\main\java\org\bookStore\common\utils\OrderStatus.java
 C:\Users\lmlms\Desktop\cadeiras\4ano\2semestre\ASID\bookStore-project-ms\bookStore-backend\common\src\main\java\org\bookStore\common\events\BookQuantityUpdatedEvent.java
 C:\Users\lmlms\Desktop\cadeiras\4ano\2semestre\ASID\bookStore-project-ms\bookStore-backend\common\src\main\java\org\bookStore\common\commands\UpdateBookQuantityCommand.java
+C:\Users\lmlms\Desktop\cadeiras\4ano\2semestre\ASID\bookStore-project-ms\bookStore-backend\common\src\main\java\org\bookStore\common\events\OrderInfoCancelledEvent.java
 C:\Users\lmlms\Desktop\cadeiras\4ano\2semestre\ASID\bookStore-project-ms\bookStore-backend\common\src\main\java\org\bookStore\common\events\BookQuantityRollbackedEvent.java
 C:\Users\lmlms\Desktop\cadeiras\4ano\2semestre\ASID\bookStore-project-ms\bookStore-backend\common\src\main\java\org\bookStore\common\events\OrderInfoEvent.java
 C:\Users\lmlms\Desktop\cadeiras\4ano\2semestre\ASID\bookStore-project-ms\bookStore-backend\common\src\main\java\org\bookStore\common\events\ShippingOrderCreatedEvent.java

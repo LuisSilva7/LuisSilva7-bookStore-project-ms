@@ -3,6 +3,7 @@ package org.bookStore.shipping.shipping;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bookStore.common.commands.CreateShippingOrderCommand;
+import org.bookStore.common.events.ShippingInfoEvent;
 import org.bookStore.common.events.ShippingOrderCreatedEvent;
 import org.bookStore.shipping.exception.custom.ShippingOrderNotFoundException;
 import org.bookStore.shipping.outbox.OutboxEventService;
@@ -31,7 +32,29 @@ public class ShippingOrderService {
                 command.orderDetails()
         );
 
-        outboxEventService.saveEvent(event.orderId(), ShippingOrderCreatedEvent.class.getSimpleName(), event);
+        outboxEventService.saveEvent(
+                event.orderId(),
+                ShippingOrderCreatedEvent.class.getSimpleName(),
+                event
+        );
+
+        log.info("ShippingOrderCreatedEvent saved to outbox for orderId={}", command.orderId());
+
+        ShippingInfoEvent shippingInfo = new ShippingInfoEvent(
+                command.orderId(),
+                command.firstName(),
+                command.address(),
+                command.city(),
+                command.postalCode()
+        );
+
+        outboxEventService.saveEvent(
+                shippingInfo.orderId(),
+                ShippingInfoEvent.class.getSimpleName(),
+                shippingInfo
+        );
+
+        log.info("ShippingInfoEvent saved to outbox for orderId={}", command.orderId());
 
         return saved;
     }

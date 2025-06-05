@@ -23,7 +23,10 @@ public class OutboxPublisherService {
             "ShippingOrderIdUpdatedEvent", "shipping-order-id-updated",
             "UpdateBookQuantityCommand", "update-book-quantity",
             "ClearCartCommand", "clear-cart",
-            "RollbackBookQuantityCommand", "rollback-book-quantity"
+            "RollbackBookQuantityCommand", "rollback-book-quantity",
+            "OrderInfoEvent", "order-info",
+            "OrderInfoFinalEvent", "order-info-final",
+            "OrderInfoCancelledEvent", "order-info-cancelled"
     );
 
     @Scheduled(fixedRate = 5000)

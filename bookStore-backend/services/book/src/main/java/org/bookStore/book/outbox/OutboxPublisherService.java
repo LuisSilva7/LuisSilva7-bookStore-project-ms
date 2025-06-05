@@ -20,7 +20,8 @@ public class OutboxPublisherService {
     private static final Map<String, String> EVENT_TOPICS = Map.of(
             "BookQuantityUpdatedEvent", "book-quantity-updated",
             "BookQuantityUpdateFailedEvent", "book-quantity-update-failed",
-            "BookQuantityRollbackedEvent", "book-quantity-rollbacked"
+            "BookQuantityRollbackedEvent", "book-quantity-rollbacked",
+            "BookInfoEvent", "book-info"
     );
 
     @Scheduled(fixedRate = 5000)

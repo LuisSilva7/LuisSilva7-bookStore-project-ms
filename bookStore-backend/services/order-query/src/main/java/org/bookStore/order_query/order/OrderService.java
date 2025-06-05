@@ -2,11 +2,13 @@ package org.bookStore.order_query.order;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bookStore.common.events.BookInfoEvent;
-import org.bookStore.common.events.OrderInfoEvent;
-import org.bookStore.common.events.OrderInfoFinalEvent;
-import org.bookStore.common.events.ShippingInfoEvent;
+import org.bookStore.common.events.*;
 import org.bookStore.order_query.book.BookItem;
+import org.bookStore.order_query.response.PageResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +24,31 @@ import java.util.Optional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderMapper orderMapper;
 
-    public List<Order> getOrdersBetweenDates(LocalDate startDate, LocalDate endDate) {
+    public PageResponse<OrderResponse> getOrdersBetweenDates(LocalDate startDate, LocalDate endDate, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("orderDate").descending());
         LocalDateTime start = startDate.atStartOfDay();
         LocalDateTime end = endDate.atTime(LocalTime.MAX);
-        return orderRepository.findByOrderDateBetween(start, end);
+
+        Page<Order> orderPage = orderRepository.findByOrderDateBetween(start, end, pageable);
+
+        List<OrderResponse> content = orderPage.getContent()
+                .stream()
+                .map(orderMapper::toOrderResponse)
+                .toList();
+
+        return new PageResponse<>(
+                content,
+                orderPage.getNumber(),
+                orderPage.getSize(),
+                orderPage.getTotalElements(),
+                orderPage.getTotalPages(),
+                orderPage.isFirst(),
+                orderPage.isLast()
+        );
     }
+
 
     @Transactional
     public void createOrder(OrderInfoEvent event) {
@@ -86,7 +107,21 @@ public class OrderService {
     }
 
     @Transactional
-    public void updateOrderStatus(OrderInfoFinalEvent event) {
+    public void updateFinalOrderStatus(OrderInfoFinalEvent event) {
+        Optional<Order> optionalOrder = orderRepository.findByOrderId(event.orderId());
+
+        if (optionalOrder.isEmpty()) {
+            log.warn("Cannot update status. Order with ID {} not found.", event.orderId());
+            return;
+        }
+
+        Order order = optionalOrder.get();
+        order.setStatus(event.status());
+        orderRepository.save(order);
+    }
+
+    @Transactional
+    public void updateCancelledOrderStatus(OrderInfoCancelledEvent event) {
         Optional<Order> optionalOrder = orderRepository.findByOrderId(event.orderId());
 
         if (optionalOrder.isEmpty()) {

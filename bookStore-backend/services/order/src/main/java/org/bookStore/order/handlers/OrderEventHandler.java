@@ -3,6 +3,7 @@ package org.bookStore.order.handlers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.eventhandling.EventHandler;
+import org.bookStore.common.events.OrderInfoEvent;
 import org.bookStore.order.events.OrderCancelledEvent;
 import org.bookStore.order.events.OrderCreatedEvent;
 import org.bookStore.order.events.OrderFinalizedEvent;
@@ -15,6 +16,9 @@ import org.bookStore.order.outbox.OutboxEventService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
+import static org.bookStore.common.utils.OrderStatus.PROCESSING;
 import static org.bookStore.order.order.OrderStatus.CANCELLED;
 import static org.bookStore.order.order.OrderStatus.FINALIZED;
 
@@ -40,6 +44,25 @@ public class OrderEventHandler {
         );
 
         log.info("OrderCreatedEvent saved to outbox for orderId={}", event.orderId());
+
+        double totalPrice = event.orderDetails().stream()
+                .mapToDouble(d -> d.unitPrice() * d.quantity())
+                .sum();
+
+        OrderInfoEvent orderInfoEvent = new OrderInfoEvent(
+                event.orderId(),
+                LocalDateTime.now(),
+                totalPrice,
+                PROCESSING,
+                event.userId()
+        );
+
+        outboxEventService.saveEvent(
+                orderInfoEvent.orderId(),
+                orderInfoEvent.getClass().getSimpleName(),
+                orderInfoEvent
+        );
+        log.info("OrderInfoEvent saved to outbox for orderId={}", orderInfoEvent.orderId());
     }
 
     @EventHandler

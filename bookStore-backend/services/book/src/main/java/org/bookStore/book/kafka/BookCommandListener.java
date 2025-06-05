@@ -32,15 +32,6 @@ public class BookCommandListener {
         try {
             bookService.updateBookQuantities(command);
 
-            // mudar isto do cqrs
-            BookInfoEvent bookInfoEvent = new BookInfoEvent(
-                    command.orderId(),
-                    command.orderDetails()
-            );
-
-            kafkaTemplate.send("order-events-3", command.orderId(), bookInfoEvent);
-            log.info("BookQuantityUpdatedEvent sent to order-events for query update");
-
         } catch (Exception e) {
             log.error("Error updating stock for orderId={}: {}", command.orderId(), e.getMessage());
 

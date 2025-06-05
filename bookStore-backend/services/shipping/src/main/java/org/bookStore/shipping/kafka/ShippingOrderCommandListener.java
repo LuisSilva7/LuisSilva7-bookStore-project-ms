@@ -5,11 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bookStore.common.commands.CreateShippingOrderCommand;
-import org.bookStore.common.events.ShippingInfoEvent;
-import org.bookStore.common.events.ShippingOrderCreatedEvent;
 import org.bookStore.common.events.ShippingOrderCreationFailedEvent;
 import org.bookStore.shipping.outbox.OutboxEventService;
-import org.bookStore.shipping.shipping.ShippingOrder;
 import org.bookStore.shipping.shipping.ShippingOrderService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -32,19 +29,7 @@ public class ShippingOrderCommandListener {
         log.info("Received CreateShippingOrderCommand for orderId={}", command.orderId());
 
         try {
-            ShippingOrder saved = shippingOrderService.createShippingOrder(command);
-
-            // mudar isto do cqrs
-            ShippingInfoEvent shippingInfo = new ShippingInfoEvent(
-                    command.orderId(),
-                    command.firstName(),
-                    command.address(),
-                    command.city(),
-                    command.postalCode()
-            );
-
-            kafkaTemplate.send("order-events-2", command.orderId(), shippingInfo);
-            log.info("ShippingInfoUpdatedEvent sent to order-events");
+            shippingOrderService.createShippingOrder(command);
 
         } catch (Exception e) {
             log.error("Error creating ShippingOrder for orderId={}: {}", command.orderId(), e.getMessage());

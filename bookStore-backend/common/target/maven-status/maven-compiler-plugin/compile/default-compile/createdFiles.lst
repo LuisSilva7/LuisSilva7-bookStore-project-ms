@@ -1,6 +1,7 @@
 org\bookStore\common\commands\CreateShippingOrderCommand.class
 org\bookStore\common\utils\CreateOrderDetailsRequest.class
 org\bookStore\common\events\BookQuantityRollbackedEvent.class
+org\bookStore\common\events\OrderInfoCancelledEvent.class
 org\bookStore\common\events\ShippingInfoEvent.class
 org\bookStore\common\events\CartClearFailedEvent.class
 org\bookStore\common\events\BookQuantityUpdatedEvent.class

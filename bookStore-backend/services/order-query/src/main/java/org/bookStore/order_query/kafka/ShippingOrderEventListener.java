@@ -1,7 +1,9 @@
 package org.bookStore.order_query.kafka;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bookStore.common.events.BookInfoEvent;
 import org.bookStore.common.events.ShippingInfoEvent;
 import org.bookStore.order_query.order.OrderService;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -13,10 +15,17 @@ import org.springframework.stereotype.Component;
 public class ShippingOrderEventListener {
 
     private final OrderService orderService;
+    private final ObjectMapper objectMapper;
 
-    @KafkaListener(topics = "order-events-2", groupId = "order-query-group")
-    public void handle(ShippingInfoEvent event) {
-        log.info("Received ShippingInfoUpdatedEvent: {}", event);
-        orderService.updateShippingInfo(event);
+    @KafkaListener(topics = "shipping-info", groupId = "order-query-group")
+    public void handleShippingInfoEvent(String payload) {
+        try {
+            ShippingInfoEvent event = objectMapper.readValue(payload, ShippingInfoEvent.class);
+            log.info("ShippingInfoEvent received: {}", event);
+
+            orderService.updateShippingInfo(event);
+        } catch (Exception e) {
+            log.error("Failed to process ShippingInfoEvent: {}", e.getMessage());
+        }
     }
 }

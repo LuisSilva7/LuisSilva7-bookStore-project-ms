@@ -60,22 +60,6 @@ public class OrderSaga {
                 shippingCommand
         );
         log.info("Command sent to Outbox: CreateShippingOrderCommand");
-
-        // mudar isto do cqrs
-        double totalPrice = event.orderDetails().stream()
-                .mapToDouble(d -> d.unitPrice() * d.quantity())
-                .sum();
-
-        OrderInfoEvent queryEvent = new OrderInfoEvent(
-                event.orderId(),
-                LocalDateTime.now(),
-                totalPrice,
-                PROCESSING,
-                event.userId()
-        );
-
-        kafkaTemplate.send("order-events-1", event.orderId(), queryEvent);
-        log.info("Event sent to Kafka: OrderQueryUpdateEvent");
     }
 
     @SagaEventHandler(associationProperty = "orderId")
@@ -147,14 +131,20 @@ public class OrderSaga {
 
         commandGateway.send(new FinalizeOrderCommand(event.orderId()));
 
+        log.info("Command sent to Outbox: FinalizeOrderCommand");
+
         OrderInfoFinalEvent queryEvent = new OrderInfoFinalEvent(
                 event.orderId(),
                 FINALIZED
         );
 
-        // mudar cqrs
-        kafkaTemplate.send("order-events-4", event.orderId(), queryEvent);
-        log.info("Event sent to Kafka: OrderInfoFinalEvent");
+        outboxEventService.saveEvent(
+                queryEvent.orderId(),
+                OrderInfoFinalEvent.class.getSimpleName(),
+                queryEvent
+        );
+
+        log.info("Query sent to Outbox: OrderInfoFinalEvent");
     }
 
     @SagaEventHandler(associationProperty = "orderId")
@@ -163,6 +153,21 @@ public class OrderSaga {
                 event.orderId());
 
         commandGateway.send(new CancelOrderCommand(event.orderId()));
+
+        log.info("Command sent: CancelOrderCommand");
+
+        OrderInfoCancelledEvent queryEvent = new OrderInfoCancelledEvent(
+                event.orderId(),
+                CANCELLED
+        );
+
+        outboxEventService.saveEvent(
+                queryEvent.orderId(),
+                OrderInfoCancelledEvent.class.getSimpleName(),
+                queryEvent
+        );
+
+        log.info("Query sent to Outbox: OrderInfoCancelledEvent");
     }
 
     @SagaEventHandler(associationProperty = "orderId")
@@ -170,6 +175,21 @@ public class OrderSaga {
         log.info("[SAGA] Book quantity update failed for orderId={}, sending CancelOrderCommand", event.orderId());
 
         commandGateway.send(new CancelOrderCommand(event.orderId()));
+
+        log.info("Command sent: CancelOrderCommand");
+
+        OrderInfoCancelledEvent queryEvent = new OrderInfoCancelledEvent(
+                event.orderId(),
+                CANCELLED
+        );
+
+        outboxEventService.saveEvent(
+                queryEvent.orderId(),
+                OrderInfoCancelledEvent.class.getSimpleName(),
+                queryEvent
+        );
+
+        log.info("Query sent to Outbox: OrderInfoCancelledEvent");
     }
 
     @SagaEventHandler(associationProperty = "orderId")
@@ -197,5 +217,20 @@ public class OrderSaga {
         log.info("[SAGA] Book quantity rollbacked for orderId={}, sending CancelOrderCommand", event.orderId());
 
         commandGateway.send(new CancelOrderCommand(event.orderId()));
+
+        log.info("Command sent: CancelOrderCommand");
+
+        OrderInfoCancelledEvent queryEvent = new OrderInfoCancelledEvent(
+                event.orderId(),
+                CANCELLED
+        );
+
+        outboxEventService.saveEvent(
+                queryEvent.orderId(),
+                OrderInfoCancelledEvent.class.getSimpleName(),
+                queryEvent
+        );
+
+        log.info("Query sent to Outbox: OrderInfoCancelledEvent");
     }
 }

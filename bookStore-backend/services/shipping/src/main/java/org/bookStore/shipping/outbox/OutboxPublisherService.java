@@ -19,7 +19,8 @@ public class OutboxPublisherService {
 
     private static final Map<String, String> EVENT_TOPICS = Map.of(
             "ShippingOrderCreatedEvent", "shipping-order-created",
-            "ShippingOrderCreationFailedEvent", "shipping-order-creation-failed"
+            "ShippingOrderCreationFailedEvent", "shipping-order-creation-failed",
+            "ShippingInfoEvent", "shipping-info"
     );
 
     @Scheduled(fixedRate = 5000)

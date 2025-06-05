@@ -11,6 +11,7 @@ import org.bookStore.book.exception.custom.OutOfStockException;
 import org.bookStore.book.outbox.OutboxEventService;
 import org.bookStore.book.response.PageResponse;
 import org.bookStore.common.commands.UpdateBookQuantityCommand;
+import org.bookStore.common.events.BookInfoEvent;
 import org.bookStore.common.events.BookQuantityRollbackedEvent;
 import org.bookStore.common.events.BookQuantityUpdatedEvent;
 import org.bookStore.common.utils.CreateOrderDetailsRequest;
@@ -129,7 +130,26 @@ public class BookService {
                     command.orderDetails()
             );
 
-            outboxEventService.saveEvent(event.orderId(), BookQuantityUpdatedEvent.class.getSimpleName(), event);
+            outboxEventService.saveEvent(
+                    event.orderId(),
+                    BookQuantityUpdatedEvent.class.getSimpleName(),
+                    event
+            );
+
+            log.info("BookQuantityUpdatedEvent saved to outbox for orderId={}", command.orderId());
+
+            BookInfoEvent bookInfoEvent = new BookInfoEvent(
+                    command.orderId(),
+                    command.orderDetails()
+            );
+
+            outboxEventService.saveEvent(
+                    bookInfoEvent.orderId(),
+                    BookInfoEvent.class.getSimpleName(),
+                    bookInfoEvent
+            );
+
+            log.info("BookInfoEvent saved to outbox for orderId={}", command.orderId());
         }
     }
 
