@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class BookItemMapper {
 
-    public static BookItemResponse toBookItemResponse(BookItem item) {
+    public BookItemResponse toBookItemResponse(BookItem item) {
         return new BookItemResponse(
                 item.getBookId(),
                 item.getUnitPrice(),

@@ -7,13 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.bookStore.cart.cart.CartService;
 import org.bookStore.cart.outbox.OutboxEventService;
 import org.bookStore.common.commands.ClearCartCommand;
-import org.bookStore.common.commands.UpdateBookQuantityCommand;
 import org.bookStore.common.events.CartClearFailedEvent;
-import org.bookStore.common.events.CartClearedEvent;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service

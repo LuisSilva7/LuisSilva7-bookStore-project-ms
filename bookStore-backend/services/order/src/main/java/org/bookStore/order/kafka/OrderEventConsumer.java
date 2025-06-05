@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.GenericEventMessage;
 import org.bookStore.order.events.InitializeSagaEvent;
-import org.bookStore.order.events.OrderCreatedEvent;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 

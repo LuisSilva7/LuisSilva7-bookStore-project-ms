@@ -7,7 +7,6 @@ import org.bookStore.book.category.CategoryRepository;
 import org.bookStore.book.subCategory.SubCategoryRepository;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 

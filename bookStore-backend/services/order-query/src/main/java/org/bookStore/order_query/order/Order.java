@@ -1,6 +1,5 @@
 package org.bookStore.order_query.order;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.bookStore.common.utils.OrderStatus;

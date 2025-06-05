@@ -4,13 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.bookStore.cart.outbox.OutboxEventService;
 import org.bookStore.cart.response.PageResponse;
 import org.bookStore.common.commands.ClearCartCommand;
-import org.bookStore.common.events.BookQuantityUpdatedEvent;
 import org.bookStore.common.events.CartClearedEvent;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.kafka.core.KafkaTemplate;
 import lombok.RequiredArgsConstructor;
 import org.bookStore.cart.exception.custom.CartNotFoundException;
 import org.springframework.stereotype.Service;
@@ -60,7 +58,7 @@ public class CartService {
         return cartMapper.toCartResponse(cart);
     }
 
-    /*@Transactional
+    @Transactional
     public CartResponse clearCart(Long userId) {
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new CartNotFoundException("Cart not found with userId: " + userId));
@@ -69,7 +67,7 @@ public class CartService {
         cartRepository.save(cart);
 
         return cartMapper.toCartResponse(cart);
-    }*/
+    }
 
     @Transactional
     public void clearCartByUserId(ClearCartCommand command) {

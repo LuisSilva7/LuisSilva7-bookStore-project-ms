@@ -102,5 +102,4 @@ public class CartItemService {
         cart.getCartItems().remove(toRemove);
         cartRepository.save(cart);
     }
-
 }

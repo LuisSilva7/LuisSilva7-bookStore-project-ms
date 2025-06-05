@@ -7,8 +7,6 @@ import org.bookStore.cart.response.PageResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/carts")
 @RequiredArgsConstructor
@@ -35,6 +33,13 @@ public class CartController {
                 "Carts obtained successfully!", carts));
     }
 
+    @DeleteMapping("/clear")
+    public ResponseEntity<ApiResponse<CartResponse>> clearCart(@RequestHeader("x-userid") Long userId) {
+        CartResponse cart = cartService.clearCart(userId);
+
+        return ResponseEntity.ok(new ApiResponse<>(
+                "Cart with userId: " + userId + " cleared successfully!", cart));
+    }
 
     @GetMapping("/user/{id}")
     public ResponseEntity<ApiResponse<CartResponse>> getCartByUserId(@PathVariable("id") Long userId) {
@@ -43,12 +48,4 @@ public class CartController {
         return ResponseEntity.ok(new ApiResponse<>(
                 "Cart with userId: " + userId + " obtained successfully!", cart));
     }
-
-    /*@DeleteMapping("/clear")
-    public ResponseEntity<ApiResponse<CartResponse>> clearCart(@RequestHeader("x-userid") Long userId) {
-        CartResponse cart = cartService.clearCart(userId);
-
-        return ResponseEntity.ok(new ApiResponse<>(
-                "Cart with userId: " + userId + " cleared successfully!", cart));
-    }*/
 }

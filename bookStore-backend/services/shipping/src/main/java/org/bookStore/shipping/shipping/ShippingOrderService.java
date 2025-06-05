@@ -59,21 +59,6 @@ public class ShippingOrderService {
         return saved;
     }
 
-    /*public PageResponse<ShippingOrder> getAllShippingOrders(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        Page<ShippingOrder> shippingOrders = shippingOrderRepository.findAll(pageable);
-
-        return new PageResponse<>(
-                shippingOrders.getContent(),
-                shippingOrders.getNumber(),
-                shippingOrders.getSize(),
-                shippingOrders.getTotalElements(),
-                shippingOrders.getTotalPages(),
-                shippingOrders.isFirst(),
-                shippingOrders.isLast()
-        );
-    }*/
-
     public ShippingOrderResponse getShippingOrderByOrderId(String id) {
         ShippingOrder shippingOrder = shippingOrderRepository.findByOrderId(id)
                 .orElseThrow(() -> new ShippingOrderNotFoundException("ShippingOrder not found with Id: " + id));

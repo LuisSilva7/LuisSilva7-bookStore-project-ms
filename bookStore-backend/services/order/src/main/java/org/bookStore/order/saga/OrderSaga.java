@@ -21,7 +21,6 @@ import org.bookStore.order.outbox.OutboxEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.bookStore.common.utils.OrderStatus.*;
