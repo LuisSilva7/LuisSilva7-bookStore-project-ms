@@ -1,5 +1,6 @@
 package org.bookStore.order.kafka;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.eventhandling.EventBus;
@@ -16,23 +17,42 @@ import org.springframework.stereotype.Component;
 public class BookEventConsumer {
 
     private final EventBus eventBus;
+    private final ObjectMapper objectMapper;
 
-    @KafkaListener(topics = "book-quantity-updated", groupId = "saga")
-    public void handle(BookQuantityUpdatedEvent event) {
-        log.info("[Kafka→Axon] Forwarding BookQuantityUpdatedEvent to EventBus");
+    @KafkaListener(topics = "book-quantity-updated", groupId = "order-saga")
+    public void handleBookQuantityUpdated(String payload) {
+        try {
+            BookQuantityUpdatedEvent event = objectMapper.readValue(payload, BookQuantityUpdatedEvent.class);
+            log.info("[Kafka→Axon] BookQuantityUpdatedEvent received for orderId={}", event.orderId());
 
-        eventBus.publish(GenericEventMessage.asEventMessage(event));
+            eventBus.publish(GenericEventMessage.asEventMessage(event));
+        } catch (Exception e) {
+            log.error("Failed to process BookQuantityUpdatedEvent: {}", e.getMessage());
+        }
     }
 
-    @KafkaListener(topics = "book-quantity-update-failed", groupId = "saga")
-    public void handle(BookQuantityUpdateFailedEvent event) {
-        eventBus.publish(GenericEventMessage.asEventMessage(event));
+    @KafkaListener(topics = "book-quantity-update-failed", groupId = "order-saga")
+    public void handleBookQuantityUpdateFailed(String payload) {
+        try {
+            BookQuantityUpdateFailedEvent event = objectMapper.readValue(payload, BookQuantityUpdateFailedEvent.class);
+            log.info("[Kafka→Axon] BookQuantityUpdateFailedEvent received for orderId={}", event.orderId());
+
+            eventBus.publish(GenericEventMessage.asEventMessage(event));
+        } catch (Exception e) {
+            log.error("Failed to process BookQuantityUpdateFailedEvent: {}", e.getMessage());
+        }
     }
 
-    @KafkaListener(topics = "book-quantity-rollbacked", groupId = "saga")
-    public void handle(BookQuantityRollbackedEvent event) {
-        log.info("[Kafka→Axon] Forwarding BookQuantityRollbackedEvent to EventBus");
-        eventBus.publish(GenericEventMessage.asEventMessage(event));
+    @KafkaListener(topics = "book-quantity-rollbacked", groupId = "order-saga")
+    public void handleBookQuantityRollbacked(String payload) {
+        try {
+            BookQuantityRollbackedEvent event = objectMapper.readValue(payload, BookQuantityRollbackedEvent.class);
+            log.info("[Kafka→Axon] BookQuantityRollbackedEvent received for orderId={}", event.orderId());
+
+            eventBus.publish(GenericEventMessage.asEventMessage(event));
+        } catch (Exception e) {
+            log.error("Failed to process BookQuantityRollbackedEvent: {}", e.getMessage());
+        }
     }
 }
 

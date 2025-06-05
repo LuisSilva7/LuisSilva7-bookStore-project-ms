@@ -3,16 +3,21 @@ package org.bookStore.order.saga;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
-import org.axonframework.modelling.saga.SagaLifecycle;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.spring.stereotype.Saga;
-import org.bookStore.common.commands.*;
+import org.bookStore.common.commands.ClearCartCommand;
+import org.bookStore.common.commands.CreateShippingOrderCommand;
+import org.bookStore.common.commands.RollbackBookQuantityCommand;
+import org.bookStore.common.commands.UpdateBookQuantityCommand;
 import org.bookStore.common.utils.CreateOrderDetailsRequest;
 import org.bookStore.common.events.*;
+import org.bookStore.order.commands.CancelOrderCommand;
 import org.bookStore.order.commands.FinalizeOrderCommand;
 import org.bookStore.order.commands.UpdateShippingOrderIdCommand;
-import org.bookStore.order.events.OrderCreatedEvent;
+import org.bookStore.order.events.InitializeSagaEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.bookStore.order.events.ShippingOrderIdUpdatedEvent;
+import org.bookStore.order.outbox.OutboxEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 
@@ -30,10 +35,12 @@ public class OrderSaga {
     private transient KafkaTemplate<String, Object> kafkaTemplate;
     @Autowired
     private transient CommandGateway commandGateway;
+    @Autowired
+    private transient OutboxEventService outboxEventService;
 
     @StartSaga
     @SagaEventHandler(associationProperty = "orderId")
-    public void handle(OrderCreatedEvent event) {
+    public void handle(InitializeSagaEvent event) {
         log.info("SAGA started for orderId={}", event.orderId());
 
         CreateShippingOrderCommand shippingCommand = new CreateShippingOrderCommand(
@@ -48,9 +55,14 @@ public class OrderSaga {
                 event.orderDetails()
         );
 
-        kafkaTemplate.send("create-shipping-order", event.orderId(), shippingCommand);
-        log.info("Command sent to Kafka: CreateShippingOrderCommand");
+        outboxEventService.saveEvent(
+                event.orderId(),
+                CreateShippingOrderCommand.class.getSimpleName(),
+                shippingCommand
+        );
+        log.info("Command sent to Outbox: CreateShippingOrderCommand");
 
+        // mudar isto do cqrs
         double totalPrice = event.orderDetails().stream()
                 .mapToDouble(d -> d.unitPrice() * d.quantity())
                 .sum();
@@ -74,11 +86,18 @@ public class OrderSaga {
 
         UpdateShippingOrderIdCommand updateCommand = new UpdateShippingOrderIdCommand(
                 event.orderId(),
-                event.shippingOrderId()
+                event.shippingOrderId(),
+                event.userId(),
+                event.orderDetails()
         );
 
         commandGateway.send(updateCommand);
         log.info("Sent command: UpdateShippingOrderIdCommand");
+    }
+
+    @SagaEventHandler(associationProperty = "orderId")
+    public void on(ShippingOrderIdUpdatedEvent event) {
+        log.info("[SAGA] Received ShippingOrderIdUpdatedEvent for orderId={}", event.orderId());
 
         List<CreateOrderDetailsRequest> books = event.orderDetails().stream()
                 .map(detail -> new CreateOrderDetailsRequest(
@@ -94,18 +113,32 @@ public class OrderSaga {
                 books
         );
 
-        kafkaTemplate.send("update-book-quantity", event.orderId(), bookCommand);
-        log.info("Command sent to Kafka: UpdateBookQuantityCommand");
+        outboxEventService.saveEvent(
+                event.orderId(),
+                UpdateBookQuantityCommand.class.getSimpleName(),
+                bookCommand
+        );
+
+        log.info("Command sent to Outbox: UpdateBookQuantityCommand");
     }
 
     @SagaEventHandler(associationProperty = "orderId")
     public void on(BookQuantityUpdatedEvent event) {
         log.info("[SAGA] Received BookQuantityUpdatedEvent for orderId={}", event.orderId());
 
-        ClearCartCommand command = new ClearCartCommand(event.orderId(), event.userId(), event.orderDetails());
+        ClearCartCommand command = new ClearCartCommand(
+                event.orderId(),
+                event.userId(),
+                event.orderDetails()
+        );
 
-        kafkaTemplate.send("clear-cart", event.orderId(), command);
-        log.info("Sent ClearCartCommand for orderId={}", event.orderId());
+        outboxEventService.saveEvent(
+                event.orderId(),
+                ClearCartCommand.class.getSimpleName(),
+                command
+        );
+
+        log.info("Command sent to Outbox: ClearCartCommand");
     }
 
     @SagaEventHandler(associationProperty = "orderId")
@@ -120,25 +153,24 @@ public class OrderSaga {
                 FINALIZED
         );
 
+        // mudar cqrs
         kafkaTemplate.send("order-events-4", event.orderId(), queryEvent);
         log.info("Event sent to Kafka: OrderInfoFinalEvent");
     }
 
     @SagaEventHandler(associationProperty = "orderId")
     public void on(ShippingOrderCreationFailedEvent event) {
-        log.info("[SAGA] Shipping order creation failed → cancelling order");
+        log.info("[SAGA] Shipping order creation failed for orderId={} → sending CancelOrderCommand",
+                event.orderId());
 
         commandGateway.send(new CancelOrderCommand(event.orderId()));
-        SagaLifecycle.end();
     }
 
     @SagaEventHandler(associationProperty = "orderId")
     public void on(BookQuantityUpdateFailedEvent event) {
-        log.info("[SAGA] Failed to update stock, starting compensation");
+        log.info("[SAGA] Book quantity update failed for orderId={}, sending CancelOrderCommand", event.orderId());
 
         commandGateway.send(new CancelOrderCommand(event.orderId()));
-
-        SagaLifecycle.end();
     }
 
     @SagaEventHandler(associationProperty = "orderId")
@@ -152,9 +184,19 @@ public class OrderSaga {
         );
         kafkaTemplate.send("rollback-book-quantity", event.orderId(), rollbackCommand);
 
-        CancelOrderCommand cancelCommand = new CancelOrderCommand(event.orderId());
-        commandGateway.send(cancelCommand);
+        outboxEventService.saveEvent(
+                event.orderId(),
+                RollbackBookQuantityCommand.class.getSimpleName(),
+                rollbackCommand
+        );
 
-        SagaLifecycle.end();
+        log.info("Command sent to Outbox: RollbackBookQuantityCommand");
+    }
+
+    @SagaEventHandler(associationProperty = "orderId")
+    public void on(BookQuantityRollbackedEvent event) {
+        log.info("[SAGA] Book quantity rollbacked for orderId={}, sending CancelOrderCommand", event.orderId());
+
+        commandGateway.send(new CancelOrderCommand(event.orderId()));
     }
 }

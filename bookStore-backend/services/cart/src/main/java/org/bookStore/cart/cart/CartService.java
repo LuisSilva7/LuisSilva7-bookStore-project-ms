@@ -1,7 +1,11 @@
 package org.bookStore.cart.cart;
 
 import lombok.extern.slf4j.Slf4j;
+import org.bookStore.cart.outbox.OutboxEventService;
 import org.bookStore.cart.response.PageResponse;
+import org.bookStore.common.commands.ClearCartCommand;
+import org.bookStore.common.events.BookQuantityUpdatedEvent;
+import org.bookStore.common.events.CartClearedEvent;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +14,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import lombok.RequiredArgsConstructor;
 import org.bookStore.cart.exception.custom.CartNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,7 +25,7 @@ public class CartService {
 
     private final CartRepository cartRepository;
     private final CartMapper cartMapper;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final OutboxEventService outboxEventService;
 
     public CartResponse createCart(CreateCartRequest request) {
         Cart created = cartRepository.save(cartMapper.toCart(request));
@@ -66,13 +71,21 @@ public class CartService {
         return cartMapper.toCartResponse(cart);
     }*/
 
-    public void clearCartByUserId(Long userId) {
-        Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new CartNotFoundException("Cart not found with userId: " + userId));
+    @Transactional
+    public void clearCartByUserId(ClearCartCommand command) {
+        Cart cart = cartRepository.findByUserId(command.userId())
+                .orElseThrow(() -> new CartNotFoundException("Cart not found with userId: " + command.userId()));
 
         cart.getCartItems().clear();
         cartRepository.save(cart);
 
-        log.info("Cart successfully cleared for userId={}", userId);
+        log.info("Cart successfully cleared for userId={}", command.userId());
+
+        CartClearedEvent event = new CartClearedEvent(
+                command.orderId(),
+                command.userId()
+        );
+
+        outboxEventService.saveEvent(event.orderId(), CartClearedEvent.class.getSimpleName(), event);
     }
 }

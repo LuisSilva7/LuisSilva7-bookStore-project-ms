@@ -1,11 +1,11 @@
 package org.bookStore.order.aggregates;
 
 import org.axonframework.eventsourcing.EventSourcingHandler;
-import org.bookStore.common.commands.CancelOrderCommand;
-import org.bookStore.common.events.OrderCancelledEvent;
+import org.bookStore.order.commands.CancelOrderCommand;
 import org.bookStore.order.commands.CreateOrderCommand;
 import org.bookStore.order.commands.FinalizeOrderCommand;
 import org.bookStore.order.commands.UpdateShippingOrderIdCommand;
+import org.bookStore.order.events.OrderCancelledEvent;
 import org.bookStore.order.events.OrderCreatedEvent;
 
 import lombok.NoArgsConstructor;
@@ -61,13 +61,25 @@ public class OrderAggregate {
 
         AggregateLifecycle.apply(new ShippingOrderIdUpdatedEvent(
                 command.orderId(),
-                command.shippingOrderId()
+                command.shippingOrderId(),
+                command.userId(),
+                command.orderDetails()
         ));
     }
 
     @EventSourcingHandler
     public void on(ShippingOrderIdUpdatedEvent event) {
         log.info("[Aggregate] State updated with shippingOrderId={}", event.shippingOrderId());
+    }
+
+    @CommandHandler
+    public void handle(FinalizeOrderCommand command) {
+        AggregateLifecycle.apply(new OrderFinalizedEvent(command.orderId()));
+    }
+
+    @EventSourcingHandler
+    public void on(OrderFinalizedEvent event) {
+        this.status = "FINALIZED";
     }
 
     @CommandHandler
@@ -80,15 +92,5 @@ public class OrderAggregate {
     public void on(OrderCancelledEvent event) {
         log.info("[OrderAggregate] Order cancelled: {}", event.orderId());
         this.status = "CANCELED";
-    }
-
-    @CommandHandler
-    public void handle(FinalizeOrderCommand command) {
-        AggregateLifecycle.apply(new OrderFinalizedEvent(command.orderId()));
-    }
-
-    @EventSourcingHandler
-    public void on(OrderFinalizedEvent event) {
-        this.status = "FINALIZED";
     }
 }

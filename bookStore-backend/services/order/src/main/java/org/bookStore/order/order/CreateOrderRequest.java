@@ -18,4 +18,5 @@ public record CreateOrderRequest(
         @NotBlank String city,
         @Email String email,
         @NotBlank String postalCode
-) {}
+) {
+}

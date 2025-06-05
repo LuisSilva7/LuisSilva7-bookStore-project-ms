@@ -1,8 +1,11 @@
 package org.bookStore.book.kafka;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bookStore.book.book.BookService;
+import org.bookStore.book.outbox.OutboxEventService;
 import org.bookStore.common.commands.RollbackBookQuantityCommand;
 import org.bookStore.common.commands.UpdateBookQuantityCommand;
 import org.bookStore.common.events.*;
@@ -17,23 +20,19 @@ public class BookCommandListener {
 
     private final BookService bookService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final ObjectMapper objectMapper;
+    private final OutboxEventService outboxEventService;
 
     @KafkaListener(topics = "update-book-quantity", groupId = "book")
-    public void handleUpdateBookQuantity(UpdateBookQuantityCommand command) {
+    public void handleUpdateBookQuantity(String payload) throws JsonProcessingException {
+        UpdateBookQuantityCommand command = objectMapper.readValue(payload, UpdateBookQuantityCommand.class);
+
+        log.info("Received UpdateBookQuantityCommand for orderId={}", command.orderId());
+
         try {
-            log.info("Received UpdateBookQuantityCommand for orderId={}", command.orderId());
+            bookService.updateBookQuantities(command);
 
-            bookService.updateBookQuantities(command.orderDetails());
-
-            BookQuantityUpdatedEvent event = new BookQuantityUpdatedEvent(
-                    command.orderId(),
-                    command.userId(),
-                    command.orderDetails()
-            );
-
-            kafkaTemplate.send("book-quantity-updated", command.orderId(), event);
-            log.info("BookQuantityUpdatedEvent sent for orderId={}", command.orderId());
-
+            // mudar isto do cqrs
             BookInfoEvent bookInfoEvent = new BookInfoEvent(
                     command.orderId(),
                     command.orderDetails()
@@ -50,8 +49,13 @@ public class BookCommandListener {
                     command.userId()
             );
 
-            kafkaTemplate.send("book-quantity-update-failed", command.orderId(), failedEvent);
-            log.info("BookQuantityUpdateFailedEvent sent for orderId={}", command.orderId());
+            outboxEventService.saveEvent(
+                    command.orderId(),
+                    BookQuantityUpdateFailedEvent.class.getSimpleName(),
+                    failedEvent
+            );
+
+            log.info("BookQuantityUpdateFailedEvent saved to outbox for orderId={}", command.orderId());
         }
     }
 
@@ -60,16 +64,9 @@ public class BookCommandListener {
         log.info("[BookService] Reverting quantities for orderId={}", command.orderId());
 
         command.books().forEach(book -> {
-            bookService.incrementStock(book.bookId(), book.quantity());
+            bookService.incrementStock(book.bookId(), book.quantity(), command.orderId(), command.userId());
         });
 
-        BookQuantityRollbackedEvent event = new BookQuantityRollbackedEvent(
-                command.orderId(),
-                command.userId(),
-                command.books()
-        );
-
-        kafkaTemplate.send("book-quantity-rollbacked", command.orderId(), event);
         log.info("BookQuantityRollbackedEvent sent for orderId={}", command.orderId());
     }
 }

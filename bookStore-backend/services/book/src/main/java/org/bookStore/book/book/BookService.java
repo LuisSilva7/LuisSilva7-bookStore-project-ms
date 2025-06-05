@@ -8,14 +8,18 @@ import org.bookStore.book.exception.custom.AuthorNotFoundException;
 import org.bookStore.book.exception.custom.BookNotFoundException;
 import org.bookStore.book.exception.custom.CategoryNotFoundException;
 import org.bookStore.book.exception.custom.OutOfStockException;
+import org.bookStore.book.outbox.OutboxEventService;
 import org.bookStore.book.response.PageResponse;
+import org.bookStore.common.commands.UpdateBookQuantityCommand;
+import org.bookStore.common.events.BookQuantityRollbackedEvent;
+import org.bookStore.common.events.BookQuantityUpdatedEvent;
 import org.bookStore.common.utils.CreateOrderDetailsRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,7 +32,7 @@ public class BookService {
     private final BookMapper bookMapper;
     private final CategoryRepository categoryRepository;
     private final AuthorRepository authorRepository;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final OutboxEventService outboxEventService;
 
     public BookResponse createBook(CreateBookRequest request) {
         Book created = bookRepository.save(bookMapper.toBook(request));
@@ -105,8 +109,9 @@ public class BookService {
         return bookMapper.toBookResponse(saved);
     }
 
-    public void updateBookQuantities(List<CreateOrderDetailsRequest> books) {
-        for (CreateOrderDetailsRequest item : books) {
+    @Transactional
+    public void updateBookQuantities(UpdateBookQuantityCommand command) {
+        for (CreateOrderDetailsRequest item : command.orderDetails()) {
             Book book = bookRepository.findById(item.bookId())
                     .orElseThrow(() -> new BookNotFoundException(
                             "Cannot update quantity. Book not found with Id: " + item.bookId()));
@@ -117,10 +122,19 @@ public class BookService {
 
             book.setQuantity(newQuantity);
             bookRepository.save(book);
+
+            BookQuantityUpdatedEvent event = new BookQuantityUpdatedEvent(
+                    command.orderId(),
+                    command.userId(),
+                    command.orderDetails()
+            );
+
+            outboxEventService.saveEvent(event.orderId(), BookQuantityUpdatedEvent.class.getSimpleName(), event);
         }
     }
 
-    public void incrementStock(Long bookId, int quantity) {
+    @Transactional
+    public void incrementStock(Long bookId, int quantity, String orderId, Long userId) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookNotFoundException("Book not found"));
 
@@ -128,6 +142,12 @@ public class BookService {
         bookRepository.save(book);
 
         log.info("Stock incremented for bookId={}, new quantity={}", bookId, book.getQuantity());
-    }
 
+        BookQuantityRollbackedEvent event = new BookQuantityRollbackedEvent(
+                orderId,
+                userId
+        );
+
+        outboxEventService.saveEvent(event.orderId(), BookQuantityRollbackedEvent.class.getSimpleName(), event);
+    }
 }

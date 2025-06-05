@@ -1,5 +1,6 @@
 package org.bookStore.order.kafka;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.eventhandling.EventBus;
@@ -14,17 +15,31 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ShippingEventConsumer {
 
+    private final ObjectMapper objectMapper;
     private final EventBus eventBus;
 
-    @KafkaListener(topics = "shipping-order-created", groupId = "saga")
-    public void handle(ShippingOrderCreatedEvent event) {
-        log.info("[Kafka→Axon] Forwarding ShippingOrderCreatedEvent to EventBus");
+    @KafkaListener(topics = "shipping-order-created", groupId = "order-saga")
+    public void handleShippingOrderCreated(String payload) {
+        try {
+            ShippingOrderCreatedEvent event = objectMapper.readValue(payload, ShippingOrderCreatedEvent.class);
+            log.info("[Kafka→Axon] ShippingOrderCreatedEvent received for orderId={}", event.orderId());
 
-        eventBus.publish(GenericEventMessage.asEventMessage(event));
+            eventBus.publish(GenericEventMessage.asEventMessage(event));
+        } catch (Exception e) {
+            log.error("Failed to process ShippingOrderCreatedEvent: {}", e.getMessage());
+        }
     }
 
-    @KafkaListener(topics = "shipping-order-creation-failed", groupId = "saga")
-    public void handle(ShippingOrderCreationFailedEvent event) {
-        eventBus.publish(GenericEventMessage.asEventMessage(event));
+    @KafkaListener(topics = "shipping-order-creation-failed", groupId = "order-saga")
+    public void handleShippingOrderCreationFailed(String payload) {
+        try {
+            ShippingOrderCreationFailedEvent event = objectMapper.readValue(payload, ShippingOrderCreationFailedEvent.class);
+            log.info("[Kafka→Axon] ShippingOrderCreationFailedEvent received for orderId={}", event.orderId());
+
+            eventBus.publish(GenericEventMessage.asEventMessage(event));
+        } catch (Exception e) {
+            log.error("Failed to process ShippingOrderCreationFailedEvent: {}", e.getMessage());
+        }
     }
 }
+

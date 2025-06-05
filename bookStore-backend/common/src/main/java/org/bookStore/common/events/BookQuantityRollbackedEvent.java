@@ -6,7 +6,6 @@ import java.util.List;
 
 public record BookQuantityRollbackedEvent(
         String orderId,
-        Long userId,
-        List<CreateOrderDetailsRequest> books
+        Long userId
 ) {
 }

@@ -1,5 +1,6 @@
 package org.bookStore.order.kafka;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.eventhandling.EventBus;
@@ -14,19 +15,31 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CartEventConsumer {
 
+    private final ObjectMapper objectMapper;
     private final EventBus eventBus;
 
-    @KafkaListener(topics = "cart-cleared", groupId = "saga")
-    public void handle(CartClearedEvent event) {
-        log.info("[Kafka→Axon] Forwarding CartClearedEvent to EventBus");
+    @KafkaListener(topics = "cart-cleared", groupId = "order-saga")
+    public void handleCartCleared(String payload) {
+        try {
+            CartClearedEvent event = objectMapper.readValue(payload, CartClearedEvent.class);
+            log.info("[Kafka→Axon] CartClearedEvent received for orderId={}", event.orderId());
 
-        eventBus.publish(GenericEventMessage.asEventMessage(event));
+            eventBus.publish(GenericEventMessage.asEventMessage(event));
+        } catch (Exception e) {
+            log.error("Failed to process CartClearedEvent: {}", e.getMessage());
+        }
     }
 
-    @KafkaListener(topics = "cart-clear-failed", groupId = "saga")
-    public void handle(CartClearFailedEvent event) {
-        log.info("[Kafka→Axon] Forwarding CartClearFailedEvent to EventBus");
-        eventBus.publish(GenericEventMessage.asEventMessage(event));
+    @KafkaListener(topics = "cart-clear-failed", groupId = "order-saga")
+    public void handleCartClearFailed(String payload) {
+        try {
+            CartClearFailedEvent event = objectMapper.readValue(payload, CartClearFailedEvent.class);
+            log.info("[Kafka→Axon] CartClearFailedEvent received for orderId={}", event.orderId());
+
+            eventBus.publish(GenericEventMessage.asEventMessage(event));
+        } catch (Exception e) {
+            log.error("Failed to process CartClearFailedEvent: {}", e.getMessage());
+        }
     }
 }
 
