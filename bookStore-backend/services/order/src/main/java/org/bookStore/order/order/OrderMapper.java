@@ -43,6 +43,7 @@ public class OrderMapper {
                 order.getOrderId(),
                 order.getOrderDate(),
                 order.getTotalPrice(),
+                order.getStatus(),
                 order.getCartId(),
                 order.getShippingOrderId(),
                 details

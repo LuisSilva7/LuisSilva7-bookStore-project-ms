@@ -9,6 +9,7 @@ public record OrderResponse(
         String id,
         LocalDateTime orderDate,
         double totalPrice,
+        OrderStatus status,
         Long cartId,
         Long shippingOrderId,
         List<OrderDetailsResponse> orderDetails

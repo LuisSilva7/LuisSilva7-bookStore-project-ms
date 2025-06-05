@@ -43,6 +43,7 @@ public class GetOrderDetailsService {
                 orderId,
                 order.orderDate(),
                 order.totalPrice(),
+                order.status(),
                 userId,
                 shipping.firstname(),
                 shipping.address(),
