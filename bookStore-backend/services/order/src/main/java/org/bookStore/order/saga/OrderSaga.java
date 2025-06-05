@@ -24,8 +24,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.bookStore.common.utils.OrderStatus.FINALIZED;
-import static org.bookStore.common.utils.OrderStatus.PENDING;
+import static org.bookStore.common.utils.OrderStatus.*;
 
 @Saga
 @Slf4j
@@ -71,7 +70,7 @@ public class OrderSaga {
                 event.orderId(),
                 LocalDateTime.now(),
                 totalPrice,
-                PENDING,
+                PROCESSING,
                 event.userId()
         );
 

@@ -26,7 +26,7 @@ public class OrderAggregate {
     private String orderId;
 
     private Long userId;
-    private String status; // Ex: PENDING, FINALIZED, CANCELLED
+    private String status; // Ex: PROCESSING, FINALIZED, CANCELLED
 
     @CommandHandler
     public OrderAggregate(CreateOrderCommand command) {
@@ -51,7 +51,7 @@ public class OrderAggregate {
 
         this.orderId = event.orderId();
         this.userId = event.userId();
-        this.status = "PENDING";
+        this.status = "PROCESSING";
     }
 
     @CommandHandler

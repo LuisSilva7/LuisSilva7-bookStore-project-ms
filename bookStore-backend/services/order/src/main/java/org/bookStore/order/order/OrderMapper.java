@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.bookStore.order.order.OrderStatus.PENDING;
+import static org.bookStore.order.order.OrderStatus.PROCESSING;
 
 @Service
 public class OrderMapper {
@@ -20,7 +20,7 @@ public class OrderMapper {
                 .orderId(event.orderId())
                 .orderDate(LocalDateTime.now())
                 .totalPrice(calculateTotal(event.orderDetails()))
-                .status(PENDING)
+                .status(PROCESSING)
                 .cartId(event.userId())
                 .orderDetails(null)
                 .build();

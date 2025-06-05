@@ -31,7 +31,7 @@ public class OutboxEventService {
             event.setEventType(eventType);
             event.setPayload(jsonPayload);
             event.setCreatedAt(LocalDateTime.now());
-            event.setStatus("PENDING");
+            event.setStatus("PROCESSING");
 
             outboxRepository.save(event);
         } catch (Exception e) {
