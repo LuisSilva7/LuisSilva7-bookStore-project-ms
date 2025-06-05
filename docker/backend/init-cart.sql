@@ -1,0 +1,5 @@
+CREATE DATABASE IF NOT EXISTS cart_db;
+
+CREATE USER IF NOT EXISTS 'username'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON cart_db.* TO 'username'@'%';
+FLUSH PRIVILEGES;

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/docker/backend/init-book.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/docker/backend/init-cart.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/docker/backend/init-composition.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/docker/backend/init-order-query.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/docker/backend/init-order.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/docker/backend/init-shipping.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/docker/backend/init-user.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/docker/testing/init-book.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/docker/testing/init-order-query.sql" dialect="MySQL" />
   </component>

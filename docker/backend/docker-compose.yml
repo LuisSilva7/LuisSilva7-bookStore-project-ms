@@ -1,95 +1,151 @@
-version: '3.8'
-
 services:
-  mysql:
-    container_name: ms_mysql_book_store
+  mysql_book:
+    container_name: ms_mysql_book
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_USER: username
       MYSQL_PASSWORD: password
-    volumes:
-      - ./init-book.sql:/docker-entrypoint-initdb.d/init-book.sql
     ports:
       - "3306:3306"
+    volumes:
+      - mysql_data_book:/var/lib/mysql
+      - ./init-book.sql:/docker-entrypoint-initdb.d/init-book.sql
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  mysql_cart:
+    container_name: ms_mysql_cart
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: username
+      MYSQL_PASSWORD: password
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_data_cart:/var/lib/mysql
+      - ./init-cart.sql:/docker-entrypoint-initdb.d/init-cart.sql
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  mysql_composition:
+    container_name: ms_mysql_composition
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: username
+      MYSQL_PASSWORD: password
+    ports:
+      - "3309:3306"
+    volumes:
+      - mysql_data_composition:/var/lib/mysql
+      - ./init-composition.sql:/docker-entrypoint-initdb.d/init-composition.sql
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  mysql_order:
+    container_name: ms_mysql_order
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: username
+      MYSQL_PASSWORD: password
+    ports:
+      - "3310:3306"
+    volumes:
+      - mysql_data_order:/var/lib/mysql
+      - ./init-order.sql:/docker-entrypoint-initdb.d/init-order.sql
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  mysql_shipping:
+    container_name: ms_mysql_shipping
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: username
+      MYSQL_PASSWORD: password
+    ports:
+      - "3311:3306"
+    volumes:
+      - mysql_data_shipping:/var/lib/mysql
+      - ./init-shipping.sql:/docker-entrypoint-initdb.d/init-shipping.sql
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  mysql_user:
+    container_name: ms_mysql_user
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: username
+      MYSQL_PASSWORD: password
+    ports:
+      - "3312:3306"
+    volumes:
+      - mysql_data_user:/var/lib/mysql
+      - ./init-user.sql:/docker-entrypoint-initdb.d/init-user.sql
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  mysql_order_query:
+    container_name: ms_mysql_order_query
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: username
+      MYSQL_PASSWORD: password
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data_order_query:/var/lib/mysql
+      - ./init-order-query.sql:/docker-entrypoint-initdb.d/init-order-query.sql
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.2
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
     networks:
       - microservices-net
 
-  config-server-service:
-    build:
-      context: ../../bookStore-backend/services/config-server
+  kafka:
+    image: confluentinc/cp-kafka:7.3.2
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
       - microservices-net
-    depends_on:
-      - mysql
-
-  discovery-service:
-    build:
-      context: ../../bookStore-backend/services/discovery
-    networks:
-      - microservices-net
-    depends_on:
-      - mysql
-
-  gateway-service:
-    build:
-      context: ../../bookStore-backend/services/gateway
-    networks:
-      - microservices-net
-    depends_on:
-      - discovery-service
-      - config-server-service
-
-  books-service:
-    build:
-      context: ../../bookStore-backend/services/book
-    networks:
-      - microservices-net
-    depends_on:
-      - mysql
-      - discovery-service
-      - config-server-service
-
-  carts-service:
-    build:
-      context: ../../bookStore-backend/services/cart
-    networks:
-      - microservices-net
-    depends_on:
-      - mysql
-      - discovery-service
-      - config-server-service
-
-  orders-service:
-    build:
-      context: ../../bookStore-backend/services/order
-    networks:
-      - microservices-net
-    depends_on:
-      - mysql
-      - discovery-service
-      - config-server-service
-
-  shippings-service:
-    build:
-      context: ../../bookStore-backend/services/shipping
-    networks:
-      - microservices-net
-    depends_on:
-      - mysql
-      - discovery-service
-      - config-server-service
-
-  users-service:
-    build:
-      context: ../../bookStore-backend/services/user
-    networks:
-      - microservices-net
-    depends_on:
-      - mysql
-      - discovery-service
-      - config-server-service
 
 networks:
   microservices-net:
     driver: bridge
+
+volumes:
+  mysql_data_book:
+  mysql_data_cart:
+  mysql_data_composition:
+  mysql_data_order:
+  mysql_data_shipping:
+  mysql_data_user:
+  mysql_data_order_query:

@@ -1,0 +1,5 @@
+CREATE DATABASE IF NOT EXISTS shipping_db;
+
+CREATE USER IF NOT EXISTS 'username'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON shipping_db.* TO 'username'@'%';
+FLUSH PRIVILEGES;
