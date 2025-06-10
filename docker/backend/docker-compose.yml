@@ -421,7 +421,7 @@ services:
       context: ../../bookStore-backend/services/gateway
       dockerfile: Dockerfile
     ports:
-      - "8222:8222"
+      - "80:8222"
     depends_on:
       config-server:
         condition: service_healthy
