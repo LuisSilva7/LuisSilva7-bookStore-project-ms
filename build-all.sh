@@ -1,17 +1,28 @@
 #!/bin/bash
 
-echo "A construir todos os microserviços com Maven (sem testes)"
+# Caminho base dos serviços
+SERVICES_PATH="./bookStore-backend/services"
+COMMON_PATH="./bookStore-backend/common"
 
-# Caminho para a pasta dos serviços
-SERVICES_DIR="./bookStore-backend/services"
+# Lista de serviços por ordem correta (common compila primeiro)
+SERVICES=("common" "config-server" "discovery" "user" "book" "cart" "order" "shipping" "composition" "order-query" "gateway")
 
-# Percorre cada subdiretório (serviço)
-for SERVICE in "$SERVICES_DIR"/*; do
-  if [ -d "$SERVICE" ]; then
-    echo "A empacotar $(basename "$SERVICE")..."
-    (cd "$SERVICE" && ./mvnw clean package -DskipTests)
-    echo "$(basename "$SERVICE") concluído."
+echo "A compilar todos os serviços..."
+
+for SERVICE in "${SERVICES[@]}"; do
+  if [ "$SERVICE" == "common" ]; then
+    SERVICE_PATH="$COMMON_PATH"
+    echo "A instalar $SERVICE no repositório local..."
+    (cd "$SERVICE_PATH" && mvn clean install -DskipTests)
+  else
+    SERVICE_PATH="$SERVICES_PATH/$SERVICE"
+    if [ -f "$SERVICE_PATH/pom.xml" ]; then
+      echo "A compilar $SERVICE..."
+      (cd "$SERVICE_PATH" && mvn clean package -DskipTests)
+    else
+      echo "pom.xml não encontrado em $SERVICE_PATH"
+    fi
   fi
 done
 
-echo "Todos os microserviços foram construídos!"
+echo "Compilação concluída com sucesso."

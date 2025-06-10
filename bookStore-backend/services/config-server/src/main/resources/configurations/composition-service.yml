@@ -1,9 +1,10 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3309/composition_db
+    url: jdbc:mysql://mysql_composition:3306/composition_db
     username: username
     password: password
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -22,8 +23,8 @@ server:
 
 application:
   config:
-    book-url: http://localhost:8222/api/v1/books
-    cart-url: http://localhost:8222/api/v1/carts
-    cart-item-url: http://localhost:8222/api/v1/cart-items
-    order-url: http://localhost:8222/api/v1/orders
-    shipping-order-url: http://localhost:8222/api/v1/shippings
+    book-url: http://gateway:8222/api/v1/books
+    cart-url: http://gateway:8222/api/v1/carts
+    cart-item-url: http://gateway:8222/api/v1/cart-items
+    order-url: http://gateway:8222/api/v1/orders
+    shipping-order-url: http://gateway:8222/api/v1/shippings

@@ -16,53 +16,57 @@ spring:
           enabled: true
       routes:
         - id: book-service
-          uri: lb:http://BOOK-SERVICE
+          uri: lb://BOOK-SERVICE
           predicates:
             - Path=/api/v1/books/**
         - id: category-service
-          uri: lb:http://BOOK-SERVICE
+          uri: lb://BOOK-SERVICE
           predicates:
             - Path=/api/v1/categories/**
         - id: sub-category-service
-          uri: lb:http://BOOK-SERVICE
+          uri: lb://BOOK-SERVICE
           predicates:
             - Path=/api/v1/sub-categories/**
         - id: author-service
-          uri: lb:http://BOOK-SERVICE
+          uri: lb://BOOK-SERVICE
           predicates:
             - Path=/api/v1/authors/**
         - id: cart-service
-          uri: lb:http://CART-SERVICE
+          uri: lb://CART-SERVICE
           predicates:
             - Path=/api/v1/carts/**
         - id: cart-items-service
-          uri: lb:http://CART-SERVICE
+          uri: lb://CART-SERVICE
           predicates:
             - Path=/api/v1/cart-items/**
         - id: order-service
-          uri: lb:http://ORDER-SERVICE
+          uri: lb://ORDER-SERVICE
           predicates:
             - Path=/api/v1/orders/**
         - id: order-details-service
-          uri: lb:http://ORDER-SERVICE
+          uri: lb://ORDER-SERVICE
           predicates:
             - Path=/api/v1/order-details/**
         - id: shipping-service
-          uri: lb:http://SHIPPING-SERVICE
+          uri: lb://SHIPPING-SERVICE
           predicates:
             - Path=/api/v1/shippings/**
         - id: user-service
-          uri: lb:http://USER-SERVICE
+          uri: lb://USER-SERVICE
           predicates:
             - Path=/api/v1/auth/**
         - id: composition-service
-          uri: lb:http://COMPOSITION-SERVICE
+          uri: lb://COMPOSITION-SERVICE
           predicates:
             - Path=/api/v1/composition/**
         - id: order-query-service
-          uri: lb:http://ORDER-QUERY-SERVICE
+          uri: lb://ORDER-QUERY-SERVICE
           predicates:
             - Path=/api/v1/orders-query/**
+
+eureka:
+  instance:
+    hostname: gateway
 
 server:
   port: 8222
