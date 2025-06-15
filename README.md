@@ -4,7 +4,7 @@
 
 ---
 
-## ✨ Features
+## Features
 
 - **Book Management**: Add, update, and remove books from the catalog.
 - **Shopping Cart**: Allows users to add and remove items from their cart in real-time.
@@ -20,7 +20,7 @@
 
 ---
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 ### Backend
 
